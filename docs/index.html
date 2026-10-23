@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erfan Nasirzadeh Orang</title>
+<meta name="description" content="Erfan Nasirzadeh Orang: machine learning for physical systems, uncertainty, photonics, and visualization. M.S. student at Youngstown State University.">
+<meta property="og:title" content="Erfan Nasirzadeh Orang">
+<meta property="og:description" content="Machine learning for physical systems, uncertainty, photonics, and visualization.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  :root{
+    --bg:#0a0a0c; --bg-raised:#111114;
+    --line:rgba(240,238,230,0.11); --line-strong:rgba(240,238,230,0.22);
+    --ink:#efeee6; --ink-dim:#a9a79c; --ink-faint:#8a887e;
+    --accent:#c9a86a; --accent-dim:#8a7550; --accent-soft:rgba(201,168,106,0.12);
+    --max:940px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:'Lora',serif; font-size:17px; line-height:1.7; -webkit-font-smoothing:antialiased;}
+  ::selection{background:var(--accent-dim); color:#0a0a0c;}
+  a{color:var(--ink); text-decoration-color:var(--line-strong); text-underline-offset:3px;}
+  a:hover{color:var(--accent); text-decoration-color:var(--accent);}
+  a:focus-visible,button:focus-visible{outline:1.5px solid var(--accent); outline-offset:3px;}
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px;}
+  .mono{font-family:'JetBrains Mono',monospace; letter-spacing:0.02em;}
+  p{max-width:64ch; color:var(--ink-dim);}
+
+  /* nav */
+  nav{position:sticky; top:0; z-index:20; background:linear-gradient(to bottom,rgba(10,10,12,0.96),rgba(10,10,12,0.86) 70%,transparent); backdrop-filter:blur(6px); padding:18px 0 12px;}
+  nav .wrap{display:flex; justify-content:space-between; align-items:baseline; gap:16px;}
+  nav .name{font-family:'Instrument Serif',serif; font-size:1.15rem; font-style:italic; text-decoration:none;}
+  nav .links{display:flex; gap:22px; font-size:0.8rem; flex-wrap:wrap; justify-content:flex-end;}
+  nav .links a{color:var(--ink-dim); text-decoration:none;}
+  nav .links a:hover{color:var(--accent);}
+
+  /* hero */
+  header.hero{position:relative; min-height:86vh; display:flex; align-items:flex-end; padding:12vh 0 10vh; overflow:hidden;}
+  #gp{position:absolute; inset:0; width:100%; height:100%; z-index:0;}
+  .hero-fade{position:absolute; inset:0; z-index:1; background:linear-gradient(to top, var(--bg) 6%, rgba(10,10,12,0.55) 45%, rgba(10,10,12,0.2));}
+  .hero-inner{position:relative; z-index:2; opacity:0; transform:translateY(14px); animation:rise 1.1s cubic-bezier(.2,.8,.2,1) .15s forwards;}
+  @keyframes rise{to{opacity:1; transform:none;}}
+  .now{display:inline-flex; align-items:center; gap:10px; font-size:0.74rem; color:var(--accent); border:1px solid var(--accent-dim); background:var(--accent-soft); border-radius:999px; padding:5px 14px; margin:0 0 24px; text-decoration:none;}
+  .now .dot{width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 0 rgba(201,168,106,.6); animation:pulse 2.2s infinite;}
+  @keyframes pulse{70%{box-shadow:0 0 0 9px rgba(201,168,106,0);}100%{box-shadow:0 0 0 0 rgba(201,168,106,0);}}
+  h1.title{font-family:'Instrument Serif',serif; font-weight:400; font-size:clamp(2.6rem,7.2vw,5.2rem); line-height:1.02; margin:0 0 22px; max-width:15ch;}
+  h1.title em{font-style:italic; color:var(--accent);}
+  .dek{font-size:1.14rem; max-width:54ch; margin:0 0 28px; color:var(--ink-dim);}
+  .hero-meta{display:flex; flex-wrap:wrap; gap:8px 22px; font-size:0.84rem; color:var(--ink-faint);}
+  .hero-meta a{color:var(--ink-dim); text-decoration:none; border-bottom:1px solid var(--line-strong);}
+  .hero-meta a:hover{color:var(--accent); border-color:var(--accent);}
+  .gp-caption{position:absolute; right:24px; bottom:18px; z-index:2; font-size:0.68rem; color:var(--ink-faint); max-width:30ch; text-align:right;}
+
+  /* sections */
+  section{position:relative; padding:84px 0;}
+  section + section{border-top:1px solid var(--line);}
+  .s-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:40px; gap:20px; flex-wrap:wrap;}
+  .s-head h2{font-family:'Instrument Serif',serif; font-weight:400; font-style:italic; font-size:2rem; margin:0;}
+  .s-head .count{font-size:0.76rem; color:var(--ink-faint);}
+  .s-intro{margin:-24px 0 40px;}
+
+  /* news */
+  .news{list-style:none; margin:0; padding:0;}
+  .news li{display:grid; grid-template-columns:110px 1fr; gap:20px; padding:14px 0; border-bottom:1px solid var(--line);}
+  .news li:last-child{border-bottom:none;}
+  .news .when{font-size:0.76rem; color:var(--accent); padding-top:3px;}
+  .news .what{color:var(--ink);}
+  .news .what span{color:var(--ink-dim);}
+  .news li.upcoming .when::after{content:' · upcoming'; color:var(--ink-faint);}
+
+  /* story */
+  .story{display:grid; grid-template-columns:200px 1fr; gap:36px;}
+  .story aside{font-size:0.78rem; color:var(--ink-dim); line-height:1.6;}
+  .story aside strong{display:block; color:var(--accent); font-weight:500; margin-bottom:6px;}
+  .lede{font-size:1.24rem; color:var(--ink); max-width:58ch; margin:0 0 22px;}
+  .story p + p{margin-top:0;}
+
+  /* themes */
+  .themes{display:grid; grid-template-columns:repeat(2,1fr); gap:18px;}
+  .theme{border:1px solid var(--line); border-radius:6px; padding:22px 22px 18px; background:var(--bg-raised); transition:border-color .25s, transform .25s;}
+  .theme:hover{border-color:var(--accent-dim); transform:translateY(-2px);}
+  .theme .tag{font-size:0.7rem; color:var(--accent);}
+  .theme h3{font-weight:500; font-size:1.05rem; margin:8px 0 8px;}
+  .theme p{font-size:0.9rem; margin:0;}
+
+  /* path: vertical, scroll-driven timeline */
+  .path{position:relative; padding-left:56px;}
+  .path-rail,.path-fill{position:absolute; left:17px; top:8px; width:1px;}
+  .path-rail{bottom:0; background:var(--line-strong);}
+  .path-fill{width:2px; margin-left:-0.5px; height:0; background:linear-gradient(to bottom,var(--accent-dim),var(--accent)); box-shadow:0 0 10px rgba(201,168,106,.35);}
+  .period{position:relative; padding-bottom:76px;}
+  .period:last-child{padding-bottom:8px;}
+  .period::before{content:''; position:absolute; left:-45px; top:16px; width:13px; height:13px; border-radius:50%; background:var(--bg); border:1.5px solid var(--accent-dim); transition:background .4s, border-color .4s, box-shadow .4s; z-index:1;}
+  .period.on::before{background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 5px var(--accent-soft);}
+  .p-head{position:sticky; top:56px; z-index:5; padding:6px 0 16px; background:linear-gradient(to bottom,var(--bg) 72%,rgba(10,10,12,0));}
+  .p-when{font-family:'Instrument Serif',serif; font-style:italic; font-size:2.1rem; line-height:1.1; color:var(--accent); margin:0; font-weight:400;}
+  .p-sub{font-size:0.74rem; color:var(--ink-dim); display:block; margin-top:4px;}
+  .p-body{display:grid; grid-template-columns:1fr 64px 1fr; align-items:start;}
+  .card{border-radius:6px; padding:18px 20px 16px;}
+  .card .lbl{font-size:0.66rem; letter-spacing:0.08em; display:block; margin-bottom:10px;}
+  .card ul{list-style:none; margin:0; padding:0;}
+  .card li{font-size:0.9rem; line-height:1.55; color:var(--ink-dim); padding:7px 0; border-top:1px solid var(--line);}
+  .card li:first-child{border-top:none; padding-top:0;}
+  .card li b{color:var(--ink); font-weight:500;}
+  .card .d{display:block; font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:var(--accent); margin-bottom:2px;}
+  .card a{color:var(--ink); text-decoration-color:var(--accent-dim);}
+  .did{border:1px solid var(--line); background:var(--bg-raised);}
+  .did .lbl{color:var(--ink-faint);}
+  .result{border:1px solid var(--accent-dim); background:linear-gradient(160deg,var(--accent-soft),rgba(201,168,106,0.03));}
+  .result .lbl{color:var(--accent);}
+  .result li.soon .d::after{content:' · upcoming'; color:var(--ink-faint);}
+  .arrow{display:flex; flex-direction:column; align-items:center; justify-content:center; padding-top:46px; gap:4px;}
+  .arrow svg{width:46px; height:18px; overflow:visible;}
+  .arrow path{fill:none; stroke:var(--accent); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round;}
+  .arrow .stem{stroke-dasharray:44; stroke-dashoffset:0;}
+  .arrow span{font-size:0.6rem; color:var(--ink-faint); letter-spacing:0.06em;}
+  /* staged reveal: work, then arrow, then results */
+  .js .period .did,.js .period .result{opacity:0; transform:translateY(16px); transition:opacity .6s ease, transform .6s ease;}
+  .js .period .arrow{opacity:0; transition:opacity .3s ease .3s;}
+  .js .period .arrow .stem{stroke-dashoffset:44; transition:stroke-dashoffset .5s ease .35s;}
+  .js .period .result{transition-delay:.75s;}
+  .js .period.on .did,.js .period.on .result{opacity:1; transform:none;}
+  .js .period.on .arrow{opacity:1;}
+  .js .period.on .arrow .stem{stroke-dashoffset:0;}
+
+  /* publications */
+  .scholar{font-size:0.74rem; color:var(--ink-dim); text-decoration:none; border:1px solid var(--line-strong); border-radius:999px; padding:4px 12px;}
+  .scholar b{color:var(--accent); font-weight:500;}
+  .filters{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:28px;}
+  .filters button{font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--ink-dim); background:transparent; border:1px solid var(--line-strong); border-radius:999px; padding:5px 13px; cursor:pointer;}
+  .filters button[aria-pressed="true"]{color:#0a0a0c; background:var(--accent); border-color:var(--accent);}
+  .filters .count{font-size:0.7rem; color:var(--ink-faint); margin-left:auto;}
+  .pub{padding:22px 0; border-bottom:1px solid var(--line);}
+  .pub:last-of-type{border-bottom:none;}
+  .pub[hidden]{display:none;}
+  .pub-venue{font-size:0.7rem; color:var(--accent); display:block; margin-bottom:8px;}
+  .pub h3{font-weight:500; font-size:1.08rem; margin:0 0 8px; line-height:1.45;}
+  .pub .authors{font-size:0.88rem; color:var(--ink-faint); margin-bottom:6px;}
+  .pub .authors b{color:var(--ink); font-weight:500;}
+  .pub .note{font-size:0.88rem; color:var(--ink-dim); margin:0 0 8px;}
+  .pub .links{font-size:0.8rem; display:flex; gap:18px; flex-wrap:wrap; align-items:baseline;}
+  .pub .links a,.pub .links button{text-decoration:none; color:var(--ink-dim); border:none; border-bottom:1px solid var(--line-strong); background:none; padding:0; font:inherit; cursor:pointer;}
+  .pub .links a:hover,.pub .links button:hover{color:var(--accent); border-color:var(--accent);}
+  .pub .cites{color:var(--accent); font-size:0.74rem;}
+  .bib{position:relative; margin:14px 0 0; padding:14px 16px; background:var(--bg-raised); border:1px solid var(--line); border-radius:6px; font-size:0.72rem; line-height:1.55; color:var(--ink-dim); overflow-x:auto; white-space:pre;}
+  .bib[hidden]{display:none;}
+  .bib .copy{position:sticky; float:right; left:0; font-family:'JetBrains Mono',monospace; font-size:0.66rem; color:var(--accent); background:var(--bg); border:1px solid var(--accent-dim); border-radius:3px; padding:2px 8px; cursor:pointer;}
+  .badge{display:inline-block; font-size:0.62rem; color:var(--accent); border:1px solid var(--accent-dim); border-radius:3px; padding:0 6px; margin-left:8px; vertical-align:2px;}
+  .sub-h{font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; font-size:1.5rem; margin:64px 0 18px;}
+  .talk{display:grid; grid-template-columns:110px 1fr; gap:20px; padding:14px 0; border-bottom:1px solid var(--line);}
+  .talk:last-child{border-bottom:none;}
+  .talk .when{font-size:0.74rem; color:var(--accent); padding-top:3px;}
+  .talk .kind{display:block; font-size:0.66rem; color:var(--ink-faint);}
+  .talk .t{color:var(--ink); font-size:0.95rem;}
+  .talk .v{font-size:0.86rem; color:var(--ink-dim);}
+  .talk .v a{color:var(--ink-dim);}
+  .talk.upcoming .when::after{content:' · upcoming'; color:var(--ink-faint);}
+
+  /* press */
+  .press-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:26px;}
+  .press-outlet{font-size:0.7rem; color:var(--ink-dim); display:block; margin-bottom:8px;}
+  .press-item h3{font-size:1rem; font-weight:500; margin:0 0 6px; line-height:1.4;}
+  .press-item h3 a{text-decoration:none; border-bottom:1px solid var(--accent-dim);}
+  .press-item p{font-size:0.88rem; margin:0;}
+
+  /* background */
+  .split{display:grid; grid-template-columns:1fr 1fr; gap:48px;}
+  .sub{font-size:0.74rem; color:var(--ink-faint); margin:0 0 16px; font-weight:400;}
+  .list-item{padding:13px 0; border-bottom:1px solid var(--line);}
+  .list-item .lt{display:flex; justify-content:space-between; gap:12px; font-size:0.94rem;}
+  .list-item .sub-line{font-size:0.84rem; color:var(--ink-faint); margin-top:3px;}
+  .yr{font-size:0.76rem; color:var(--ink-faint); white-space:nowrap;}
+
+  /* footer */
+  footer{padding:70px 0 90px;}
+  .cta{border:1px solid var(--line-strong); border-radius:8px; padding:34px; background:linear-gradient(135deg,var(--accent-soft),transparent 60%);}
+  .cta h2{font-family:'Instrument Serif',serif; font-style:italic; font-weight:400; font-size:2rem; margin:0 0 10px;}
+  .cta p{margin:0 0 20px;}
+  .cta .links{display:flex; gap:22px; font-size:0.86rem; flex-wrap:wrap;}
+  .cta .links a{color:var(--ink); text-decoration:none; border-bottom:1px solid var(--accent-dim);}
+  .fine{margin-top:36px; font-size:0.74rem; color:var(--ink-faint);}
+
+  /* reveal on scroll */
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1; transform:none;}
+
+  @media (max-width:760px){
+    .story,.split,.themes,.press-grid{grid-template-columns:1fr;}
+    .news li,.talk{grid-template-columns:1fr; gap:2px;}
+    nav .links{gap:14px; font-size:0.72rem;}
+    nav .name{display:none;}
+    nav .links a.hide-sm{display:none;}
+    header.hero{min-height:78vh;}
+    .gp-caption{display:none;}
+    .path{padding-left:34px;}
+    .path-rail,.path-fill{left:8px;}
+    .period::before{left:-32px; width:11px; height:11px; top:15px;}
+    .p-head{top:50px;}
+    .p-when{font-size:1.75rem;}
+    .p-body{grid-template-columns:1fr;}
+    .arrow{padding:6px 0; flex-direction:row; justify-content:flex-start; margin-left:18px; gap:10px;}
+    .arrow svg{transform:rotate(90deg); width:30px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .hero-inner{animation:none; opacity:1; transform:none;}
+    .reveal{opacity:1; transform:none; transition:none;}
+    .now .dot{animation:none;}
+    html{scroll-behavior:auto;}
+    .js .period .did,.js .period .result,.js .period .arrow{opacity:1; transform:none; transition:none;}
+    .js .period .arrow .stem{stroke-dashoffset:0; transition:none;}
+    .period::before{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="name" href="#top">Erfan Nasirzadeh Orang</a>
+    <div class="links mono">
+      <a href="#news">News</a>
+      <a class="hide-sm" href="#story">Story</a>
+      <a href="#research">Research</a>
+      <a href="#path">Path</a>
+      <a href="#publications">Papers</a>
+      <a class="hide-sm" href="#background">Background</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <canvas id="gp" aria-hidden="true"></canvas>
+  <div class="hero-fade"></div>
+  <div class="wrap hero-inner">
+    <a class="now mono" href="#news"><span class="dot"></span>Presenting at IEEE VIS 2026 · Boston · Nov 9</a>
+    <h1 class="title">Teaching models to say <em>how sure</em> they are.</h1>
+    <p class="dek">I'm Erfan, an M.S. student and graduate research assistant at Youngstown State University. I build machine learning for physical systems, from lasers and photonic structures to batteries, wind turbines and the human brain, with one recurring question: how much should we trust what the model says?</p>
+    <div class="hero-meta mono">
+      <a href="mailto:enorang@student.ysu.edu">enorang@student.ysu.edu</a>
+      <a href="https://scholar.google.com/citations?user=zrKHVW4AAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+      <a href="https://www.linkedin.com/in/erfan-nasirzadeh-orang/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="cv.pdf">CV</a>
+      <span>Youngstown, OH</span>
+    </div>
+  </div>
+  <p class="gp-caption mono">Background: a live Gaussian process. Each new observation shrinks its uncertainty band.</p>
+</header>
+
+<section id="news">
+  <div class="wrap">
+    <div class="s-head"><h2>Recent news</h2><span class="count mono">2026</span></div>
+    <ul class="news reveal">
+      <li class="upcoming"><span class="when mono">Nov 19</span><span class="what">Talk at the YSU Graduate Research &amp; Creative Showcase. <span>Can a brain-prediction model replicate an fMRI study of how people read charts?</span></span></li>
+      <li class="upcoming"><span class="when mono">Nov 9–13</span><span class="what">Presenting at IEEE VIS 2026 in Boston: first-author paper at the VISxVISION workshop, plus an invited poster at the main conference. <span>Supported by the YSU Foundation and a YSU Student USE Fund award.</span></span></li>
+      <li><span class="when mono">Oct 2026</span><span class="what">New SPIE proceedings paper on lasing and amplified spontaneous emission from biological photonic structures. <span>Light in Nature 2026, Proc. SPIE 14207.</span></span></li>
+      <li><span class="when mono">Sep 2026</span><span class="what">VISxVISION paper accepted and posted on <a href="https://arxiv.org/abs/2609.15685" target="_blank" rel="noopener">arXiv (2609.15685)</a>.</span></li>
+      <li><span class="when mono">Aug 2026</span><span class="what">Wind turbine surrogate paper submitted to Part A: Journal of Power and Energy.</span></li>
+      <li><span class="when mono">Aug 2026</span><span class="what">Started the M.S. in Computing &amp; Information Systems at YSU as a funded graduate research assistant with Dr. Zack While.</span></li>
+      <li><span class="when mono">2026</span><span class="what">ML surrogate paper on hybrid nanofluid battery thermal management published in the <a href="https://doi.org/10.1007/s10973-026-16179-8" target="_blank" rel="noopener">Journal of Thermal Analysis and Calorimetry</a>.</span></li>
+      <li><span class="when mono">May 2026</span><span class="what">Graduated with a B.S. in Computer Science with Honors from YSU.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="story">
+  <div class="wrap">
+    <div class="s-head"><h2>The story so far</h2></div>
+    <div class="story">
+      <aside class="mono reveal">
+        <strong>In short</strong>
+        Physics lab bench → ML for physical systems → uncertainty as the thread → visualization and the brain.
+      </aside>
+      <div class="reveal">
+        <p class="lede">I came to Youngstown as an international student, and my first research home was a quantum optics lab full of lasers, vapor cells and noisy signals.</p>
+        <p>That lab, Dr. Michael Crescimanno's, taught me the habit that still drives everything I do: before you believe a result, check how the measurement was made. I wrote automated checks for laser power and magnetic-field drift before trusting a model of chirp asymmetry in Zeeman EIT, and that work became my first paper.</p>
+        <p>The same habit followed me into a collaboration on peacock tail feathers that turn out to lase. I built a tool to line up two very different imaging methods before drawing any conclusion about the nanostructure, and the paper ended up in Scientific Reports and in Science's news pages.</p>
+        <p>From there I moved toward machine learning, first at a Williams College REU on generative models and optimal transport, then on surrogate models for batteries and wind turbines, where I used Gaussian process regression for the thing I care about most: not just a prediction, but an honest error bar around it.</p>
+        <p>Now, with Dr. Zack While, I ask the same question about the brain: can a neural encoding model stand in for an expensive fMRI study of how people read charts? It matched the direction of 11 of 14 published effects. I'm also starting on the uncertainty side of an open-source finite-element vibrational solver with Dr. Andrew Cooksy at SDSU.</p>
+        <p>Next, I want to do this at PhD depth: building ML for science that knows when it doesn't know.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="wrap">
+    <div class="s-head"><h2>Research</h2></div>
+    <div class="themes">
+      <div class="theme reveal"><span class="tag mono">01 · SCIENTIFIC ML &amp; UQ</span><h3>Surrogates with honest error bars</h3><p>Gaussian process regression and uncertainty-aware surrogate models for batteries, wind turbines and vibrational spectroscopy.</p></div>
+      <div class="theme reveal"><span class="tag mono">02 · NEURO ML &amp; VISUALIZATION</span><h3>Models as stand-ins for the brain</h3><p>Testing whether neural encoding models like TRIBE v2 can replicate fMRI findings about how people perceive charts.</p></div>
+      <div class="theme reveal"><span class="tag mono">03 · PHOTONICS</span><h3>Light in living structures</h3><p>Laser and amplified spontaneous emission from biological photonic structures such as peacock feathers.</p></div>
+      <div class="theme reveal"><span class="tag mono">04 · QUANTUM OPTICS</span><h3>Measurements you can trust</h3><p>Zeeman electromagnetically induced transparency, signal processing and stability checks in the lab.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="path">
+  <div class="wrap">
+    <div class="s-head"><h2>The path, year by year</h2></div>
+    <p class="s-intro">What I worked on in each stretch of time, and what came out of it.</p>
+
+    <div class="path" id="pathline">
+      <div class="path-rail"></div>
+      <div class="path-fill" id="pathfill"></div>
+
+      <article class="period">
+        <div class="p-head"><h3 class="p-when">2022–23</h3><span class="p-sub mono">B.S. YEAR ONE · QUANTUM OPTICS LAB</span></div>
+        <div class="p-body">
+          <div class="card did"><span class="lbl mono">WHAT I DID</span><ul>
+            <li><span class="d">Aug 2022</span>Started the B.S. in Computer Science with Honors at YSU.</li>
+            <li><span class="d">Oct 2022</span>Joined <b>Dr. Michael Crescimanno's</b> quantum optics lab: laser experiments on Zeeman EIT, plus modeling and signal processing in Python and MATLAB.</li>
+          </ul></div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 46 18"><path class="stem" d="M2 9H43"/><path d="M36 3l7 6-7 6"/></svg><span class="mono">LED TO</span></div>
+          <div class="card result"><span class="lbl mono">WHAT CAME OF IT</span><ul>
+            <li><span class="d">Jun 2024</span>My poster at <a href="https://meetings.aps.org/Meeting/DAMOP24/Session/S00.38" target="_blank" rel="noopener">APS DAMOP 2024</a>, Fort Worth.</li>
+            <li><span class="d">Feb 2025</span><b>JOSA B paper</b> on chirp asymmetry in Zeeman EIT, my first publication. <a href="https://doi.org/10.1364/JOSAB.544782" target="_blank" rel="noopener">DOI</a></li>
+            <li><span class="d">Sep 2025</span>Poster at the NCHC annual conference, San Diego.</li>
+          </ul></div>
+        </div>
+      </article>
+
+      <article class="period">
+        <div class="p-head"><h3 class="p-when">2023–24</h3><span class="p-sub mono">B.S. YEAR TWO · IMAGING LAB</span></div>
+        <div class="p-body">
+          <div class="card did"><span class="lbl mono">WHAT I DID</span><ul>
+            <li><span class="d">Fall 2023</span>Imaging Lab Technician Intern in Physics &amp; Biology: trained and certified on AFM, SEM and TEM.</li>
+            <li>Optical measurements of rhodamine 6G–infused peafowl feathers with collaborators at Florida Polytechnic University.</li>
+            <li>Nanoscale imaging of gold nanoparticles for a master's thesis project.</li>
+          </ul></div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 46 18"><path class="stem" d="M2 9H43"/><path d="M36 3l7 6-7 6"/></svg><span class="mono">LED TO</span></div>
+          <div class="card result"><span class="lbl mono">WHAT CAME OF IT</span><ul>
+            <li><span class="d">2025</span><b>Scientific Reports paper</b> on laser emission from peafowl tail feathers, cited 4 times. <a href="https://doi.org/10.1038/s41598-025-04039-8" target="_blank" rel="noopener">DOI</a></li>
+            <li><span class="d">Jul–Aug 2025</span>Covered by <a href="https://www.science.org/content/article/peacock-feathers-can-be-lasers" target="_blank" rel="noopener">Science</a>, The Business Journal and Florida Poly News.</li>
+            <li><span class="d">Oct 2025</span>My talk at the <a href="https://meetings.aps.org/Meeting/EGLSF25/Session/F02.3" target="_blank" rel="noopener">APS EGLS &amp; MIAAPT</a> joint meeting.</li>
+            <li><span class="d">Oct 2026</span>Follow-up paper in Proc. SPIE 14207. <a href="https://doi.org/10.1117/12.3112389" target="_blank" rel="noopener">DOI</a></li>
+          </ul></div>
+        </div>
+      </article>
+
+      <article class="period">
+        <div class="p-head"><h3 class="p-when">Summer 2024</h3><span class="p-sub mono">REU · WILLIAMS COLLEGE</span></div>
+        <div class="p-body">
+          <div class="card did"><span class="lbl mono">WHAT I DID</span><ul>
+            <li>Generative ML for data assimilation, with mentors from Caltech, CUNY and NYU.</li>
+            <li>Applied optimal transport to atmospheric datasets and helped build a conditional sampling algorithm for forecasting.</li>
+          </ul></div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 46 18"><path class="stem" d="M2 9H43"/><path d="M36 3l7 6-7 6"/></svg><span class="mono">LED TO</span></div>
+          <div class="card result"><span class="lbl mono">WHAT CAME OF IT</span><ul>
+            <li>A 12% improvement in predictive accuracy for our weather models.</li>
+            <li>My turn from the physics bench toward machine learning.</li>
+          </ul></div>
+        </div>
+      </article>
+
+      <article class="period">
+        <div class="p-head"><h3 class="p-when">2024–25</h3><span class="p-sub mono">B.S. YEAR THREE · MODELING &amp; TEACHING</span></div>
+        <div class="p-body">
+          <div class="card did"><span class="lbl mono">WHAT I DID</span><ul>
+            <li>Kept working in the quantum optics lab through May 2025.</li>
+            <li><span class="d">Feb 2025</span>COMAP Mathematical Contest in Modeling: a three-person team model of wear on historical stairs.</li>
+            <li><span class="d">From Aug 2024</span>Honors Student Teaching Assistant, guiding 65+ honors students each year.</li>
+          </ul></div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 46 18"><path class="stem" d="M2 9H43"/><path d="M36 3l7 6-7 6"/></svg><span class="mono">LED TO</span></div>
+          <div class="card result"><span class="lbl mono">WHAT CAME OF IT</span><ul>
+            <li><span class="d">2025</span><a href="https://academics.ysu.edu/mathematics-and-statistics/comap-modeling-contest" target="_blank" rel="noopener">COMAP MCM Successful Participant</a>.</li>
+            <li><span class="d">Mar 2025</span>My talk on the model at the Pi Mu Epsilon conference, YSU.</li>
+          </ul></div>
+        </div>
+      </article>
+
+      <article class="period">
+        <div class="p-head"><h3 class="p-when">2025–26</h3><span class="p-sub mono">B.S. YEAR FOUR · ML SURROGATES &amp; DATA</span></div>
+        <div class="p-body">
+          <div class="card did"><span class="lbl mono">WHAT I DID</span><ul>
+            <li>With <b>Dr. Kyosung Choo's</b> group: trained XGBoost, random forest and GPR surrogates on CFD and thermal-system data for battery cooling and a Darrieus wind turbine, with SHAP and nested cross-validation.</li>
+            <li><span class="d">Spring 2026</span>YSU Data Mine (Purdue partnership) with Dr. Jeffrey Coldren and Dr. G. Jay Kerns: retention modeling for 1,935 students.</li>
+            <li><span class="d">From Aug 2025</span>Peer tutor in CS and math.</li>
+          </ul></div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 46 18"><path class="stem" d="M2 9H43"/><path d="M36 3l7 6-7 6"/></svg><span class="mono">LED TO</span></div>
+          <div class="card result"><span class="lbl mono">WHAT CAME OF IT</span><ul>
+            <li><span class="d">2026</span><b>JTAC paper</b> on ML surrogates for battery thermal management. <a href="https://doi.org/10.1007/s10973-026-16179-8" target="_blank" rel="noopener">DOI</a></li>
+            <li><span class="d">Aug 2026</span>Wind turbine paper submitted (under review).</li>
+            <li><span class="d">Spring 2026</span>Data Mine findings presented at YSU STEM Day and to university leadership.</li>
+            <li><span class="d">May 2026</span>B.S. with Honors, Honors Scholar with Distinction.</li>
+          </ul></div>
+        </div>
+      </article>
+
+      <article class="period">
+        <div class="p-head"><h3 class="p-when">Summer 2026</h3><span class="p-sub mono">GRADUATE RESEARCH · NEURAL ENCODING</span></div>
+        <div class="p-body">
+          <div class="card did"><span class="lbl mono">WHAT I DID</span><ul>
+            <li><span class="d">From May 2026</span>Graduate research assistant with <b>Dr. Zack While</b>.</li>
+            <li>Tested whether Meta's TRIBE v2 neural encoding model can replicate a published fMRI study of how people read charts, in PyTorch on an HPC cluster.</li>
+          </ul></div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 46 18"><path class="stem" d="M2 9H43"/><path d="M36 3l7 6-7 6"/></svg><span class="mono">LED TO</span></div>
+          <div class="card result"><span class="lbl mono">WHAT CAME OF IT</span><ul>
+            <li>The model matched the direction of 11 of 14 reported cortical effects.</li>
+            <li><span class="d">Sep 2026</span><b>First-author paper</b> accepted at VISxVISION, IEEE VIS 2026. <a href="https://arxiv.org/abs/2609.15685" target="_blank" rel="noopener">arXiv</a></li>
+            <li>Travel support from the YSU Foundation and a Student USE Fund award.</li>
+          </ul></div>
+        </div>
+      </article>
+
+      <article class="period">
+        <div class="p-head"><h3 class="p-when">Fall 2026 · now</h3><span class="p-sub mono">M.S. YEAR ONE</span></div>
+        <div class="p-body">
+          <div class="card did"><span class="lbl mono">WHAT I'M DOING</span><ul>
+            <li><span class="d">Aug 2026</span>Started the thesis-based M.S. in Computing &amp; Information Systems, fully funded.</li>
+            <li>Qualitative coding on embedded interactive information displays, with a PhD student (in preparation).</li>
+            <li>Starting on uncertainty in Kriging-interpolated potential energy surfaces for FEMvib, with Dr. Andrew Cooksy (SDSU).</li>
+          </ul></div>
+          <div class="arrow" aria-hidden="true"><svg viewBox="0 0 46 18"><path class="stem" d="M2 9H43"/><path d="M36 3l7 6-7 6"/></svg><span class="mono">NEXT</span></div>
+          <div class="card result"><span class="lbl mono">COMING UP</span><ul>
+            <li class="soon"><span class="d">Nov 9–13</span>Workshop talk and invited poster at IEEE VIS 2026, Boston.</li>
+            <li class="soon"><span class="d">Nov 19</span>Talk at the YSU Graduate Research &amp; Creative Showcase.</li>
+            <li>A PhD in scientific ML and uncertainty quantification.</li>
+          </ul></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="publications">
+  <div class="wrap">
+    <div class="s-head"><h2>Publications</h2><a class="scholar mono" href="https://scholar.google.com/citations?user=zrKHVW4AAAAJ&amp;hl=en" target="_blank" rel="noopener"><b>4</b> citations · h-index <b>1</b> · Google Scholar</a></div>
+    <div class="filters" role="group" aria-label="Filter publications">
+      <button aria-pressed="true" data-f="all">All</button>
+      <button aria-pressed="false" data-f="ml">Scientific ML</button>
+      <button aria-pressed="false" data-f="vis">Vis &amp; neuro</button>
+      <button aria-pressed="false" data-f="photonics">Photonics &amp; optics</button>
+      <span class="count mono"><span id="pubcount">6</span> papers</span>
+    </div>
+
+    <div class="pub" data-t="vis">
+      <span class="pub-venue mono">IEEE VIS 2026 · VISxVISION WORKSHOP · ARXIV:2609.15685</span>
+      <h3>Can a Neural Encoding Model Replicate an fMRI Visualization Study? <span class="badge mono">FIRST AUTHOR</span></h3>
+      <div class="authors"><b>E. Nasirzadeh Orang</b>, Z. While</div>
+      <p class="note">TRIBE v2 matched the direction of 11 of 14 reported cortical effects, concentrated in visual regions.</p>
+      <div class="links mono"><a href="https://arxiv.org/abs/2609.15685" target="_blank" rel="noopener">arXiv</a><a href="https://ieeevis.org/year/2026/program/paper/3b9c6999-3420-49c7-a24f-92a1edc21f2a/" target="_blank" rel="noopener">VIS program</a><a href="https://osf.io/8a96x/" target="_blank" rel="noopener">Supplemental</a><button class="cite" type="button" aria-expanded="false">Cite</button></div>
+<pre class="bib mono" hidden>@misc{orang2026neural,
+  title  = {Can a Neural Encoding Model Replicate an fMRI Visualization Study?},
+  author = {Nasirzadeh Orang, Erfan and While, Zack},
+  year   = {2026},
+  eprint = {2609.15685},
+  archivePrefix = {arXiv},
+  note   = {VISxVISION Workshop, IEEE VIS 2026}
+}</pre>
+    </div>
+
+    <div class="pub" data-t="photonics">
+      <span class="pub-venue mono">PROC. SPIE 14207 · LIGHT IN NATURE 2026 · 142070A</span>
+      <h3>Optical feedback from biological photonic structures supporting ASE and laser emission</h3>
+      <div class="authors">N. J. Dawson, H. Liu, A. Fiorito, D. R. Sheffield, B. Bish, <b>E. Nasirzadeh Orang</b>, R. Robinson, M. Giron, M. Crescimanno</div>
+      <div class="links mono"><a href="https://doi.org/10.1117/12.3112389" target="_blank" rel="noopener">DOI</a><button class="cite" type="button" aria-expanded="false">Cite</button></div>
+<pre class="bib mono" hidden>@inproceedings{dawson2026optical,
+  title     = {Optical feedback from biological photonic structures supporting ASE and laser emission},
+  author    = {Dawson, N. J. and Liu, H. and Fiorito, A. and Sheffield, D. R. and Bish, B. and Nasirzadeh Orang, E. and Robinson, R. and Giron, M. and Crescimanno, M.},
+  booktitle = {Light in Nature 2026},
+  series    = {Proc. SPIE},
+  volume    = {14207},
+  pages     = {142070A},
+  year      = {2026},
+  doi       = {10.1117/12.3112389}
+}</pre>
+    </div>
+
+    <div class="pub" data-t="ml">
+      <span class="pub-venue mono">JOURNAL OF THERMAL ANALYSIS AND CALORIMETRY · 2026</span>
+      <h3>Machine learning surrogates for Al₂O₃–TiO₂/water hybrid nanofluid battery thermal management under variable heat generation</h3>
+      <div class="authors">A. Ulus, I. Uluocak, <b>E. Nasirzadeh Orang</b>, N. Vakili, K. Choo</div>
+      <p class="note">Four-model benchmark; Gaussian process regression for uncertainty, SHAP for attribution.</p>
+      <div class="links mono"><a href="https://doi.org/10.1007/s10973-026-16179-8" target="_blank" rel="noopener">DOI</a><button class="cite" type="button" aria-expanded="false">Cite</button></div>
+<pre class="bib mono" hidden>@article{ulus2026machine,
+  title   = {Machine learning surrogates for {Al2O3--TiO2}/water hybrid nanofluid battery thermal management under variable heat generation},
+  author  = {Ulus, A. and Uluocak, I. and Nasirzadeh Orang, E. and Vakili, N. and Choo, K.},
+  journal = {Journal of Thermal Analysis and Calorimetry},
+  pages   = {1--19},
+  year    = {2026},
+  doi     = {10.1007/s10973-026-16179-8}
+}</pre>
+    </div>
+
+    <div class="pub" data-t="ml">
+      <span class="pub-venue mono">PART A: JOURNAL OF POWER AND ENERGY · UNDER REVIEW</span>
+      <h3>Operating-regime dependence of turbulence effects on an H-type Darrieus vertical-axis wind turbine using uncertainty-aware surrogate modeling</h3>
+      <div class="authors">A. Ulus, I. Uluocak, <b>E. Nasirzadeh Orang</b>, N. Vakili, K. Choo</div>
+      <div class="links mono"><a href="mailto:enorang@student.ysu.edu">Request a copy</a></div>
+    </div>
+
+    <div class="pub" data-t="photonics">
+      <span class="pub-venue mono">SCIENTIFIC REPORTS · VOL. 15, ART. 20938 · 2025</span>
+      <h3>Spectral fingerprint of laser emission from rhodamine 6G–infused male Indian peafowl tail feathers</h3>
+      <div class="authors">A. Fiorito, D. R. Sheffield, H. Liu, <b>E. Nasirzadeh Orang</b>, N. J. Dawson</div>
+      <div class="links mono"><a href="https://doi.org/10.1038/s41598-025-04039-8" target="_blank" rel="noopener">DOI</a><a href="https://www.science.org/content/article/peacock-feathers-can-be-lasers" target="_blank" rel="noopener">In Science</a><button class="cite" type="button" aria-expanded="false">Cite</button><span class="cites">Cited by 4</span></div>
+<pre class="bib mono" hidden>@article{fiorito2025spectral,
+  title   = {Spectral fingerprint of laser emission from rhodamine 6G infused male Indian peafowl tail feathers},
+  author  = {Fiorito, A. and Sheffield, D. R. and Liu, H. and Nasirzadeh Orang, E. and Dawson, N. J.},
+  journal = {Scientific Reports},
+  volume  = {15},
+  number  = {1},
+  pages   = {20938},
+  year    = {2025},
+  doi     = {10.1038/s41598-025-04039-8}
+}</pre>
+    </div>
+
+    <div class="pub" data-t="photonics">
+      <span class="pub-venue mono">JOSA B · VOL. 42, NO. 2, PP. 404–411 · 2025</span>
+      <h3>Chirp asymmetry in Zeeman electromagnetically induced transparency</h3>
+      <div class="authors">J. Gorkos, K. Grenzig, <b>E. Nasirzadeh Orang</b>, V. Thomas, D. Tighe, M. Crescimanno</div>
+      <div class="links mono"><a href="https://doi.org/10.1364/JOSAB.544782" target="_blank" rel="noopener">DOI</a><button class="cite" type="button" aria-expanded="false">Cite</button></div>
+<pre class="bib mono" hidden>@article{gorkos2025chirp,
+  title   = {Chirp asymmetry in Zeeman electromagnetically induced transparency},
+  author  = {Gorkos, J. and Grenzig, K. and Nasirzadeh Orang, E. and Thomas, V. and Tighe, D. and Crescimanno, M.},
+  journal = {Journal of the Optical Society of America B},
+  volume  = {42},
+  number  = {2},
+  pages   = {404--411},
+  year    = {2025},
+  doi     = {10.1364/JOSAB.544782}
+}</pre>
+    </div>
+
+    <h3 class="sub-h" id="talks">Talks, posters &amp; abstracts</h3>
+    <div class="talks reveal">
+      <div class="talk upcoming"><span class="when mono">Nov 2026<span class="kind">TALK + POSTER</span></span><div><div class="t">Can a Neural Encoding Model Replicate an fMRI Visualization Study?</div><div class="v">VISxVISION Workshop and main conference poster, IEEE VIS 2026, Boston, MA</div></div></div>
+      <div class="talk"><span class="when mono">Oct 2025<span class="kind">ORAL</span></span><div><div class="t">Spectral fingerprint of laser emission from rhodamine 6G infused male Indian peafowl tail feathers</div><div class="v"><b>E. Nasirzadeh Orang</b>, N. J. Dawson, A. Fiorito, H. Liu, R. Scheffield · Fall 2025 Joint Meeting of the APS Eastern Great Lakes Section and MIAAPT, Ypsilanti, MI · Bulletin of the American Physical Society · <a href="https://meetings.aps.org/Meeting/EGLSF25/Session/F02.3" target="_blank" rel="noopener">Abstract</a></div></div></div>
+      <div class="talk"><span class="when mono">Sep 2025<span class="kind">POSTER</span></span><div><div class="t">Chirp asymmetry in Zeeman electromagnetically induced transparency</div><div class="v">59th Annual Conference of the National Collegiate Honors Council, San Diego, CA · <a href="https://whova.com/embedded/session/ljaLfAB8LfI24MKXCkafQuyu4pv52OeNgt0nutcUXIw%3D/4820076/" target="_blank" rel="noopener">Session</a></div></div></div>
+      <div class="talk"><span class="when mono">Mar 2025<span class="kind">ORAL</span></span><div><div class="t">A mathematical model of foot traffic-induced wear on historical staircases</div><div class="v">Pi Mu Epsilon Annual Conference, Youngstown State University · <a href="https://www.ysumathstat.org/pme/conferences/PME2025tidyProgramFinal_v1-1%20no%20comap.pdf" target="_blank" rel="noopener">Program</a></div></div></div>
+      <div class="talk"><span class="when mono">Jun 2024<span class="kind">POSTER</span></span><div><div class="t">Chirp asymmetry in Zeeman electromagnetically induced transparency</div><div class="v">M. Crescimanno, J. Gorkos, K. Grenzig, V. Thomas, <b>E. Nasirzadeh Orang</b>, et al. · 55th APS DAMOP Meeting, Fort Worth, TX, Session S00.38 · <a href="https://meetings.aps.org/Meeting/DAMOP24/Session/S00.38" target="_blank" rel="noopener">Abstract</a></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="press">
+  <div class="wrap">
+    <div class="s-head"><h2>In the press</h2></div>
+    <div class="press-grid">
+      <div class="press-item reveal"><span class="press-outlet mono">SCIENCE (AAAS) · JUL 2025</span><h3><a href="https://www.science.org/content/article/peacock-feathers-can-be-lasers" target="_blank" rel="noopener">"Peacock feathers can be lasers"</a></h3><p>News coverage of the Scientific Reports findings.</p></div>
+      <div class="press-item reveal"><span class="press-outlet mono">THE BUSINESS JOURNAL · AUG 2025</span><h3><a href="https://businessjournaldaily.com/study-detects-lasers-in-peacock-tail-feathers/" target="_blank" rel="noopener">"Study Detects Lasers in Peacock Tail Feathers"</a></h3><p>Regional coverage, including an interview.</p></div>
+      <div class="press-item reveal"><span class="press-outlet mono">FLORIDA POLYTECHNIC · AUG 2025</span><h3><a href="https://floridapoly.edu/news/082725-florida-poly-student-research-uncovers-laser-light-from-peacock-feathers/" target="_blank" rel="noopener">"Florida Poly student research uncovers laser light from peacock feathers"</a></h3><p>University feature on the collaboration.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="background">
+  <div class="wrap">
+    <div class="s-head"><h2>Background</h2></div>
+    <div class="split">
+      <div class="reveal">
+        <h3 class="sub mono">EDUCATION</h3>
+        <div class="list-item"><div class="lt"><span>M.S., Computing &amp; Information Systems</span><span class="yr mono">2026–</span></div><div class="sub-line">Youngstown State University · Thesis-based, fully funded GRA with Dr. Zack While</div></div>
+        <div class="list-item"><div class="lt"><span>B.S., Computer Science with Honors</span><span class="yr mono">2022–26</span></div><div class="sub-line">Youngstown State University · Minors in Mathematics &amp; Data Analytics · Honors Scholar with Distinction</div></div>
+        <div class="list-item"><div class="lt"><span>Research Experience for Undergraduates</span><span class="yr mono">2024</span></div><div class="sub-line">Williams College · Generative ML &amp; optimal transport</div></div>
+      </div>
+      <div class="reveal">
+        <h3 class="sub mono">HONORS, TEACHING &amp; SERVICE</h3>
+        <div class="list-item"><div class="lt"><span>President's List (2 semesters) · Dean's List (4 semesters)</span><span class="yr mono">YSU</span></div></div>
+        <div class="list-item"><div class="lt"><span>COMAP MCM, Successful Participant</span><span class="yr mono">2025</span></div></div>
+        <div class="list-item"><div class="lt"><span>Peer Tutor, CS &amp; Mathematics</span><span class="yr mono">2025–26</span></div><div class="sub-line">Programming, data structures, databases, discrete structures, linear algebra, statistics</div></div>
+        <div class="list-item"><div class="lt"><span>Honors Student Teaching Assistant</span><span class="yr mono">2024–26</span></div><div class="sub-line">Sokolov Honors College · 65+ students each year</div></div>
+        <div class="list-item"><div class="lt"><span>International Orientation Leader</span><span class="yr mono">2023–26</span></div><div class="sub-line">Tours and info sessions for 1,200+ incoming students</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>Let's talk research.</h2>
+      <p>I'm looking for PhD opportunities in scientific machine learning, uncertainty quantification, computational imaging and visualization. If you'll be at IEEE VIS in Boston, I'd love to say hi.</p>
+      <div class="links mono">
+        <a href="mailto:enorang@student.ysu.edu">enorang@student.ysu.edu</a>
+        <a href="https://scholar.google.com/citations?user=zrKHVW4AAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        <a href="https://www.linkedin.com/in/erfan-nasirzadeh-orang/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="cv.pdf">CV (PDF)</a>
+      </div>
+    </div>
+    <p class="fine mono">© 2026 Erfan Nasirzadeh Orang · Last updated October 2026</p>
+  </div>
+</footer>
+
+<script>
+/* Publication filters */
+(function(){
+  var btns=document.querySelectorAll('.filters button'), pubs=document.querySelectorAll('.pub'), count=document.getElementById('pubcount');
+  btns.forEach(function(b){b.addEventListener('click',function(){
+    btns.forEach(function(x){x.setAttribute('aria-pressed','false');});
+    b.setAttribute('aria-pressed','true');
+    var f=b.dataset.f, n=0;
+    pubs.forEach(function(p){var show=(f==='all'||p.dataset.t===f); p.hidden=!show; if(show)n++;});
+    count.textContent=n;
+  });});
+})();
+
+/* Cite: show BibTeX, with a copy button */
+(function(){
+  document.querySelectorAll('.pub .cite').forEach(function(b){
+    var bib=b.closest('.pub').querySelector('.bib'), text=bib.textContent;
+    var copy=document.createElement('button'); copy.type='button'; copy.className='copy'; copy.textContent='Copy';
+    bib.insertBefore(copy,bib.firstChild);
+    copy.addEventListener('click',function(){
+      if(!navigator.clipboard)return;
+      navigator.clipboard.writeText(text).then(function(){copy.textContent='Copied'; setTimeout(function(){copy.textContent='Copy';},1500);});
+    });
+    b.addEventListener('click',function(){var open=bib.hidden; bib.hidden=!open; b.setAttribute('aria-expanded',open);});
+  });
+})();
+
+/* Reveal on scroll */
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
+  var io=new IntersectionObserver(function(entries){entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});},{threshold:0.12});
+  els.forEach(function(e){io.observe(e);});
+})();
+
+/* Path timeline: the gold line fills as you scroll, and each period
+   lights up (work, then arrow, then results) as it reaches the reading line. */
+(function(){
+  var path=document.getElementById('pathline'), fill=document.getElementById('pathfill');
+  var periods=path.querySelectorAll('.period');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ticking=false;
+  function update(){
+    ticking=false;
+    var line=window.innerHeight*0.62, r=path.getBoundingClientRect();
+    var p=Math.max(0,Math.min(1,(line-r.top)/r.height));
+    fill.style.height=(reduce?100:p*100)+'%';
+    periods.forEach(function(el){if(reduce||el.getBoundingClientRect().top<line)el.classList.add('on');});
+  }
+  function onScroll(){if(!ticking){ticking=true; requestAnimationFrame(update);}}
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll);
+  update();
+})();
+
+/* Hero: a live Gaussian process. Observations arrive one by one;
+   the posterior mean and the 2-sigma band update with each one. */
+(function(){
+  var c=document.getElementById('gp'), ctx=c.getContext('2d');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W,H,dpr=Math.min(window.devicePixelRatio||1,2);
+  function resize(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  window.addEventListener('resize',resize); resize();
+
+  var ell=0.12, sf=1, noise=0.0004, G=160;
+  function f(x,t){return 0.55*Math.sin(6.2*x+t)+0.3*Math.sin(13*x-0.7*t)+0.15*Math.cos(21*x);}
+  function k(a,b){var d=a-b;return sf*Math.exp(-d*d/(2*ell*ell));}
+  function chol(A){var n=A.length,L=[];for(var i=0;i<n;i++){L.push(new Array(n).fill(0));for(var j=0;j<=i;j++){var s=A[i][j];for(var m=0;m<j;m++)s-=L[i][m]*L[j][m];L[i][j]=(i===j)?Math.sqrt(Math.max(s,1e-12)):s/L[j][j];}}return L;}
+  function solveL(L,b){var n=b.length,y=new Array(n);for(var i=0;i<n;i++){var s=b[i];for(var m=0;m<i;m++)s-=L[i][m]*y[m];y[i]=s/L[i][i];}return y;}
+  function solveLT(L,y){var n=y.length,x=new Array(n);for(var i=n-1;i>=0;i--){var s=y[i];for(var m=i+1;m<n;m++)s-=L[m][i]*x[m];x[i]=s/L[i][i];}return x;}
+
+  var obs=[], phase=Math.random()*6, last=0, MAXOBS=9, interval=1300;
+  function addObs(){
+    if(obs.length>=MAXOBS){obs=[];phase+=1.3;}
+    var x=0.04+Math.random()*0.92; obs.push({x:x,y:f(x,phase),born:performance.now()});
+  }
+  function posterior(){
+    var n=obs.length, xs=[], mu=[], sd=[];
+    for(var g=0;g<G;g++)xs.push(g/(G-1));
+    if(!n){for(var g2=0;g2<G;g2++){mu.push(0);sd.push(Math.sqrt(sf));}return{xs:xs,mu:mu,sd:sd};}
+    var K=[];for(var i=0;i<n;i++){K.push([]);for(var j=0;j<n;j++)K[i].push(k(obs[i].x,obs[j].x)+(i===j?noise:0));}
+    var L=chol(K), alpha=solveLT(L,solveL(L,obs.map(function(o){return o.y;})));
+    for(var g3=0;g3<G;g3++){
+      var ks=obs.map(function(o){return k(xs[g3],o.x);}), m=0;
+      for(var q=0;q<n;q++)m+=ks[q]*alpha[q];
+      var v=solveL(L,ks), vv=0;for(var r=0;r<n;r++)vv+=v[r]*v[r];
+      mu.push(m); sd.push(Math.sqrt(Math.max(sf-vv,0)));
+    }
+    return{xs:xs,mu:mu,sd:sd};
+  }
+  function X(x){return x*W;} function Y(y){return H*0.42 - y*H*0.17;}
+  function draw(now){
+    ctx.clearRect(0,0,W,H);
+    var p=posterior();
+    // band
+    ctx.beginPath();
+    for(var i=0;i<G;i++)ctx.lineTo(X(p.xs[i]),Y(p.mu[i]+2*p.sd[i]));
+    for(var j=G-1;j>=0;j--)ctx.lineTo(X(p.xs[j]),Y(p.mu[j]-2*p.sd[j]));
+    ctx.closePath(); ctx.fillStyle='rgba(201,168,106,0.10)'; ctx.fill();
+    // faint truth
+    ctx.beginPath(); for(var t=0;t<G;t++){var xx=t/(G-1);ctx.lineTo(X(xx),Y(f(xx,phase)));}
+    ctx.strokeStyle='rgba(239,238,230,0.07)'; ctx.lineWidth=1; ctx.setLineDash([3,5]); ctx.stroke(); ctx.setLineDash([]);
+    // mean
+    ctx.beginPath(); for(var m=0;m<G;m++)ctx.lineTo(X(p.xs[m]),Y(p.mu[m]));
+    ctx.strokeStyle='rgba(201,168,106,0.55)'; ctx.lineWidth=1.6; ctx.stroke();
+    // points
+    obs.forEach(function(o){
+      var age=Math.max(0,Math.min((now-o.born)/500,1));
+      ctx.beginPath(); ctx.arc(X(o.x),Y(o.y),3,0,Math.PI*2); ctx.fillStyle='rgba(239,238,230,'+(0.85*age)+')'; ctx.fill();
+      if(age<1){ctx.beginPath(); ctx.arc(X(o.x),Y(o.y),3+14*age,0,Math.PI*2); ctx.strokeStyle='rgba(201,168,106,'+(0.5*(1-age))+')'; ctx.stroke();}
+    });
+  }
+  if(reduce){for(var s=0;s<6;s++)addObs(); draw(performance.now()+1000); return;}
+  addObs();
+  function loop(now){ if(now-last>interval){addObs(); last=now;} draw(now); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
