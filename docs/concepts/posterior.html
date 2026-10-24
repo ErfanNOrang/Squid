@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Posterior · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Layout: a Distill-style scroll story. Text steps on the left, a sticky
+     Gaussian-process figure on the right that refits as each step arrives. */
+  :root{
+    color-scheme:dark;
+    --bg:#0c0f14; --panel:#121720; --line:rgba(226,232,240,.10); --line2:rgba(226,232,240,.2);
+    --ink:#e7ebf0; --dim:#a3acb9; --faint:#7c8695;
+    --gold:#e2b45e; --gold-soft:rgba(226,180,94,.14);
+    --serif:'Spectral',Georgia,serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:300 18px/1.7 var(--serif);-webkit-font-smoothing:antialiased}
+  a{color:var(--ink);text-decoration-color:var(--line2);text-underline-offset:3px}
+  a:hover{color:var(--gold);text-decoration-color:var(--gold)}
+  a:focus-visible,button:focus-visible{outline:1.5px solid var(--gold);outline-offset:3px}
+  .wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+  .mono{font-family:var(--mono);font-size:.74rem;letter-spacing:.04em}
+  p{max-width:62ch;color:var(--dim)}
+  h1,h2,h3{font-weight:300;text-wrap:balance}
+
+  nav{position:sticky;top:0;z-index:30;background:rgba(12,15,20,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;justify-content:space-between;align-items:center;height:54px;gap:16px}
+  nav .who{font-style:italic;text-decoration:none;font-size:1.05rem}
+  nav .links{display:flex;gap:20px}
+  nav .links a{color:var(--dim);text-decoration:none}
+  nav .links a:hover{color:var(--gold)}
+
+  .hero{padding:12vh 0 8vh}
+  .pill{display:inline-flex;gap:10px;align-items:center;color:var(--gold);border:1px solid rgba(226,180,94,.45);background:var(--gold-soft);border-radius:99px;padding:5px 14px;text-decoration:none}
+  .pill i{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+  .hero h1{font-size:clamp(2.6rem,7vw,5.6rem);line-height:1;margin:28px 0 26px;max-width:14ch;letter-spacing:-.01em}
+  .hero h1 em{color:var(--gold)}
+  .hero .dek{font-size:1.18rem;max-width:56ch}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:26px}
+  .hero .meta a{color:var(--dim);text-decoration:none;border-bottom:1px solid var(--line2)}
+
+  /* scroll story */
+  .scrolly{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;border-top:1px solid var(--line)}
+  .steps{padding:10vh 0 30vh}
+  .step{min-height:78vh;display:flex;flex-direction:column;justify-content:center;opacity:.32;transition:opacity .5s}
+  .step.active{opacity:1}
+  .step .k{color:var(--gold)}
+  .step h2{font-size:2.3rem;margin:6px 0 4px;font-style:italic}
+  .step .sub{color:var(--faint)}
+  .step h4{font:500 .68rem/1 var(--mono);letter-spacing:.12em;color:var(--faint);margin:22px 0 8px;text-transform:uppercase}
+  .step ul{list-style:none;margin:0;padding:0}
+  .step li{font-size:.96rem;line-height:1.55;color:var(--dim);padding:7px 0 7px 22px;position:relative}
+  .step li .d{font:400 .68rem var(--mono);color:var(--gold);display:block}
+  .step li.did::before{content:'';position:absolute;left:2px;top:15px;width:10px;height:2px;background:var(--th,var(--faint))}
+  .step li.came::before{content:'';position:absolute;left:1px;top:11px;width:9px;height:9px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 3px var(--gold-soft)}
+  .step li.came.soon::before{background:transparent;border:1.5px dashed var(--gold);box-shadow:none}
+  .step li:hover{color:var(--ink)}
+  .step .arrow{font-family:var(--mono);color:var(--gold);font-size:.7rem;margin:10px 0 0;letter-spacing:.1em}
+  .figure{position:sticky;top:54px;height:calc(100vh - 54px);display:flex;flex-direction:column;justify-content:center;padding:24px 0}
+  .fig-box{position:relative;height:min(68vh,560px);background:var(--panel);border:1px solid var(--line);border-radius:4px}
+  canvas{display:block;width:100%;height:100%}
+  .fig-cap{color:var(--faint);margin-top:12px;max-width:none}
+  .fig-cap b{color:var(--gold);font-weight:500}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:8px;color:var(--faint)}
+  .legend span::before{content:'';display:inline-block;width:10px;height:3px;background:var(--c);margin-right:6px;vertical-align:middle}
+  .tip{position:absolute;pointer-events:none;background:#0a0d12;border:1px solid var(--line2);border-radius:4px;padding:8px 10px;font:400 .78rem/1.4 var(--serif);color:var(--ink);max-width:240px;opacity:0;transition:opacity .15s;z-index:3}
+  .tip .d{font:400 .66rem var(--mono);color:var(--gold);display:block}
+
+  /* sections after the story */
+  section{padding:90px 0;border-top:1px solid var(--line)}
+  .head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px;margin-bottom:34px}
+  .head h2{font-size:2.2rem;font-style:italic;margin:0}
+  .head .mono{color:var(--faint)}
+  .metric{color:var(--dim);text-decoration:none;border:1px solid var(--line2);border-radius:99px;padding:4px 12px}
+  .metric b{color:var(--gold);font-weight:500}
+  .pub{display:grid;grid-template-columns:110px minmax(0,1fr);gap:24px;padding:22px 0;border-bottom:1px solid var(--line)}
+  .pub .y{color:var(--gold)}
+  .pub .y small{display:block;color:var(--faint);margin-top:4px}
+  .pub h3{font-size:1.15rem;font-weight:400;margin:0 0 6px;line-height:1.4}
+  .pub .au{font-size:.92rem;color:var(--faint)}
+  .pub .au .me{color:var(--ink);font-weight:500}
+  .pub .ve{font-size:.92rem;color:var(--dim);font-style:italic}
+  .pub .note{font-size:.92rem;margin:6px 0 0}
+  .pub .links{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+  .pub .links a,.pub .links button{color:var(--dim);background:none;border:0;padding:0;border-bottom:1px solid var(--line2);font:inherit;cursor:pointer;text-decoration:none}
+  .pub .links a:hover,.pub .links button:hover{color:var(--gold);border-color:var(--gold)}
+  .pub .cites{color:var(--gold)}
+  .badge{color:var(--gold);border:1px solid rgba(226,180,94,.5);border-radius:3px;padding:0 6px;font-size:.62rem;margin-left:8px;vertical-align:3px}
+  pre.bib{margin:12px 0 0;padding:14px;background:var(--panel);border:1px solid var(--line);border-radius:4px;color:var(--dim);font:400 .72rem/1.55 var(--mono);overflow-x:auto;position:relative}
+  pre.bib button{position:absolute;right:10px;top:10px;font:400 .66rem var(--mono);color:var(--gold);background:var(--bg);border:1px solid rgba(226,180,94,.5);border-radius:3px;cursor:pointer}
+  .row{display:grid;grid-template-columns:110px minmax(0,1fr);gap:24px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .row .t{color:var(--ink)}
+  .row .w{font-size:.9rem;color:var(--dim)}
+  .row .w .me{color:var(--ink);font-weight:500}
+  .row .k{color:var(--gold)} .row .k small{display:block;color:var(--faint)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+  .cols h3{font:500 .7rem var(--mono);letter-spacing:.12em;color:var(--faint);margin:0 0 10px}
+  .li{display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.98rem}
+  .li small{display:block;color:var(--faint);font-size:.86rem}
+  .li .mono{color:var(--faint);white-space:nowrap}
+  .press{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px}
+  .press .mono{color:var(--faint)}
+  .press h3{font-size:1.1rem;font-weight:400;margin:6px 0 0;line-height:1.4}
+  .press a{text-decoration:none;border-bottom:1px solid rgba(226,180,94,.5)}
+  .cta{border:1px solid var(--line2);border-radius:6px;padding:38px;background:linear-gradient(135deg,var(--gold-soft),transparent 60%)}
+  .cta h2{font-size:2.3rem;font-style:italic;margin:0 0 10px}
+  .cta .meta{display:flex;flex-wrap:wrap;gap:10px 24px}
+  .cta .meta a{text-decoration:none;border-bottom:1px solid rgba(226,180,94,.5)}
+  footer{padding:30px 0 70px;color:var(--faint)}
+
+  @media (max-width:860px){
+    .scrolly{display:flex;flex-direction:column}
+    .figure{order:-1}
+    nav .who{display:none}
+    nav .links{gap:16px}
+    .figure{top:54px;height:auto;padding:10px 0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+    .fig-box{height:34vh}
+    .fig-cap,.legend{display:none}
+    .step{min-height:auto;padding:12vh 0;opacity:1}
+    .steps{padding:0 0 10vh}
+    .pub,.row{grid-template-columns:1fr;gap:4px}
+    .cols,.press{grid-template-columns:1fr}
+    nav .links a.x{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.step{transition:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a class="who" href="#top">Erfan Nasirzadeh Orang</a><div class="links mono"><a href="#story">The fit</a><a href="#papers">Papers</a><a class="x" href="#background">Background</a><a href="#contact">Contact</a></div></div></nav>
+
+<header class="hero wrap" id="top">
+  <a class="pill mono" href="#story"><i></i><span id="now"></span></a>
+  <h1>Teaching models to say <em>how sure</em> they are.</h1>
+  <p class="dek" id="dek"></p>
+  <div class="meta mono" id="meta"></div>
+</header>
+
+<div class="wrap scrolly" id="story">
+  <div class="steps" id="steps"></div>
+  <div class="figure">
+    <div class="fig-box" id="figbox"><canvas id="gp" role="img" aria-label="A Gaussian process fitted to the cumulative count of Erfan's results over time"></canvas><div class="tip" id="tip"></div></div>
+    <p class="fig-cap mono" id="cap"></p>
+    <div class="legend mono" id="legend"></div>
+  </div>
+</div>
+
+<section id="papers"><div class="wrap">
+  <div class="head"><h2>Observations, in print</h2><a class="metric mono" id="metric" target="_blank" rel="noopener"></a></div>
+  <div id="pubs"></div>
+  <div class="head" style="margin-top:80px"><h2>Talks, posters &amp; abstracts</h2></div>
+  <div id="talks"></div>
+</div></section>
+
+<section id="press"><div class="wrap">
+  <div class="head"><h2>In the press</h2></div>
+  <div class="press" id="pressgrid"></div>
+</div></section>
+
+<section id="background"><div class="wrap">
+  <div class="head"><h2>Background</h2></div>
+  <div class="cols"><div><h3>EDUCATION</h3><div id="edu"></div></div><div><h3>HONORS, TEACHING &amp; SERVICE</h3><div id="hon"></div></div></div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+  <div class="cta"><h2>Help me shrink the band.</h2><p id="seek"></p><div class="meta mono" id="meta2"></div></div>
+</div></section>
+<footer class="wrap mono">© 2026 Erfan Nasirzadeh Orang · Concept: Posterior · Facts from Google Scholar and CV, Oct 2026</footer>
+
+<script src="content.js"></script>
+<script>
+(function(){
+  var S=SITE, $=function(id){return document.getElementById(id);};
+  $('now').textContent=S.now; $('dek').textContent=S.dek; $('seek').textContent=S.seeking;
+  var meta='<a href="mailto:'+S.email+'">'+S.email+'</a>'+S.link('Google Scholar',S.scholar)+S.link('LinkedIn',S.linkedin)+'<a href="'+S.cv+'">CV</a><span style="color:var(--faint)">'+S.place+'</span>';
+  $('meta').innerHTML=meta; $('meta2').innerHTML=meta;
+  $('metric').href=S.scholar; $('metric').innerHTML='<b>'+S.metrics.citations+'</b> citations · h-index <b>'+S.metrics.h+'</b> · Google Scholar';
+
+  /* ---------- steps ---------- */
+  var steps=[{intro:true,cut:2022.55}];
+  S.periods.forEach(function(p){steps.push({p:p,cut:p.end});});
+  steps.push({future:true,cut:S.nowAt});
+  var html='';
+  steps.forEach(function(s,i){
+    if(s.intro){html+='<div class="step" data-i="'+i+'"><span class="k mono">HOW TO READ THIS</span><h2>A model of me, fitted live</h2><p>Each white dot on the right is a result I can point to: a paper, a talk, a finding. The gold line is a Gaussian process fitted to how many I had by each date, and the band is its 95% uncertainty.</p><p>Scroll, and the model sees one more year of data at a time.</p></div>';return;}
+    if(s.future){html+='<div class="step" data-i="'+i+'"><span class="k mono">AFTER '+'OCT 2026'+'</span><h2>Where the model gets unsure</h2><p>Past today there is no data, so the band opens up. The trend says more results; the width says nobody knows which ones.</p><p>That widening region is the part I want to spend a PhD on: building models, and a research life, that know how much they don\'t know.</p><p class="arrow">→ <a href="#contact">LET\'S TALK</a></p></div>';return;}
+    var p=s.p;
+    html+='<div class="step" data-i="'+i+'"><span class="k mono">'+p.sub.toUpperCase()+'</span><h2>'+p.label+'</h2><h4>What I did</h4><ul>';
+    p.did.forEach(function(id){var e=S.event(id);html+='<li class="did" style="--th:'+S.thread(e.thread).color+'"><span class="d">'+e.when+'</span>'+S.esc(e.text)+'</li>';});
+    html+='</ul><p class="arrow">↓ WHAT CAME OF IT</p><ul>';
+    p.came.forEach(function(id){var e=S.event(id);html+='<li class="came'+(e.soon?' soon':'')+'" data-e="'+id+'"><span class="d">'+e.when+(e.soon?' · upcoming':'')+'</span>'+(e.url?'<a href="'+S.esc(e.url)+'" target="_blank" rel="noopener">'+S.esc(e.text)+'</a>':S.esc(e.text))+'</li>';});
+    html+='</ul></div>';
+  });
+  $('steps').innerHTML=html;
+  $('legend').innerHTML=S.threads.map(function(t){return '<span style="--c:'+t.color+'">'+t.short+'</span>';}).join('')+'<span style="--c:#fff">● result</span>';
+
+  /* ---------- Gaussian process ---------- */
+  var X0=2022.4, X1=2028.2, YMAX=30, G=260, ELL=0.42, SF=2.4, NOISE=0.5;
+  var results=S.events.filter(function(e){return e.kind==='came';}).sort(function(a,b){return a.at-b.at;});
+  results.forEach(function(e,i){e.y=i+1;});
+  var works=S.events.filter(function(e){return e.kind==='did';});
+  function k(a,b){var d=a-b;return SF*SF*Math.exp(-d*d/(2*ELL*ELL));}
+  function chol(A){var n=A.length,L=[];for(var i=0;i<n;i++){L.push(new Array(n).fill(0));for(var j=0;j<=i;j++){var s=A[i][j];for(var m=0;m<j;m++)s-=L[i][m]*L[j][m];L[i][j]=i===j?Math.sqrt(Math.max(s,1e-9)):s/L[j][j];}}return L;}
+  function fw(L,b){var y=[];for(var i=0;i<b.length;i++){var s=b[i];for(var m=0;m<i;m++)s-=L[i][m]*y[m];y.push(s/L[i][i]);}return y;}
+  function bw(L,y){var n=y.length,x=new Array(n);for(var i=n-1;i>=0;i--){var s=y[i];for(var m=i+1;m<n;m++)s-=L[m][i]*x[m];x[i]=s/L[i][i];}return x;}
+  /* anchor at zero before the first day, then a linear trend as the mean function */
+  function fit(cut){
+    var pts=[{at:2022.55,y:0}].concat(results.filter(function(e){return e.at<=cut+1e-6 && !e.soon;}));
+    var n=pts.length, sx=0,sy=0,sxx=0,sxy=0;
+    pts.forEach(function(p){sx+=p.at;sy+=p.y;sxx+=p.at*p.at;sxy+=p.at*p.y;});
+    var slope=n>2?(n*sxy-sx*sy)/(n*sxx-sx*sx):0, icpt=(sy-slope*sx)/n;
+    slope=Math.max(slope,0);
+    function m(x){return icpt+slope*x;}
+    var K=pts.map(function(a,i){return pts.map(function(b,j){return k(a.at,b.at)+(i===j?NOISE*NOISE:0);});});
+    var L=chol(K), al=bw(L,fw(L,pts.map(function(p){return p.y-m(p.at);})));
+    var mu=[],sd=[];
+    for(var g=0;g<G;g++){var x=X0+(X1-X0)*g/(G-1), ks=pts.map(function(p){return k(x,p.at);}), mm=m(x);
+      for(var q=0;q<n;q++)mm+=ks[q]*al[q];
+      var v=fw(L,ks),vv=0;for(var r=0;r<n;r++)vv+=v[r]*v[r];
+      mu.push(mm);sd.push(Math.sqrt(Math.max(SF*SF-vv,0)+NOISE*NOISE));}
+    return {mu:mu,sd:sd,pts:pts.slice(1)};
+  }
+
+  var c=$('gp'),ctx=c.getContext('2d'),W,H,dpr=Math.min(devicePixelRatio||1,2),PAD={l:46,r:18,t:22,b:40};
+  function size(){W=c.clientWidth;H=c.clientHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  function X(x){return PAD.l+(x-X0)/(X1-X0)*(W-PAD.l-PAD.r);}
+  function Y(y){return H-PAD.b-y/YMAX*(H-PAD.t-PAD.b);}
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cur=fit(2022.55), from=cur, to=cur, t0=0, dur=700, step=null, hot=null, drawn=[];
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    var e=t<1?1-Math.pow(1-t,3):1, mu=[],sd=[];
+    for(var g=0;g<G;g++){mu.push(lerp(from.mu[g],to.mu[g],e));sd.push(lerp(from.sd[g],to.sd[g],e));}
+    cur={mu:mu,sd:sd,pts:to.pts};
+    ctx.font='11px "IBM Plex Mono", monospace';ctx.textBaseline='middle';
+    /* axes */
+    ctx.strokeStyle='rgba(226,232,240,.08)';ctx.fillStyle='#7c8695';ctx.lineWidth=1;
+    for(var yr=2023;yr<=2028;yr++){var xx=X(yr);ctx.beginPath();ctx.moveTo(xx,PAD.t);ctx.lineTo(xx,H-PAD.b);ctx.stroke();ctx.textAlign='center';ctx.fillText(yr,xx,H-PAD.b+16);}
+    for(var yy=0;yy<=YMAX;yy+=10){ctx.textAlign='right';ctx.fillText(yy,PAD.l-10,Y(yy));}
+    /* period window and future zone */
+    var nowX=X(S.nowAt);
+    ctx.fillStyle='rgba(226,180,94,.05)';ctx.fillRect(nowX,PAD.t,W-PAD.r-nowX,H-PAD.t-PAD.b);
+    ctx.strokeStyle='rgba(226,180,94,.5)';ctx.setLineDash([3,4]);ctx.beginPath();ctx.moveTo(nowX,PAD.t);ctx.lineTo(nowX,H-PAD.b);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#e2b45e';ctx.textAlign='left';ctx.fillText('today',nowX+6,PAD.t+8);
+    if(step&&step.p){ctx.fillStyle='rgba(226,232,240,.05)';ctx.fillRect(X(step.p.start),PAD.t,X(step.p.end)-X(step.p.start),H-PAD.t-PAD.b);}
+    /* band and mean */
+    ctx.beginPath();for(var i=0;i<G;i++){var x=X0+(X1-X0)*i/(G-1);ctx.lineTo(X(x),Y(Math.min(YMAX,mu[i]+2*sd[i])));}
+    for(var j=G-1;j>=0;j--){var x2=X0+(X1-X0)*j/(G-1);ctx.lineTo(X(x2),Y(Math.max(0,mu[j]-2*sd[j])));}
+    ctx.closePath();ctx.fillStyle='rgba(226,180,94,.16)';ctx.fill();
+    ctx.beginPath();for(var m=0;m<G;m++){var x3=X0+(X1-X0)*m/(G-1);ctx.lineTo(X(x3),Y(Math.max(0,Math.min(YMAX,mu[m]))));}
+    ctx.strokeStyle='#e2b45e';ctx.lineWidth=1.8;ctx.stroke();
+    /* rug of work, coloured by thread */
+    works.forEach(function(w){if(w.at>(step?step.cut:0)+1e-6)return;ctx.fillStyle=S.thread(w.thread).color;ctx.fillRect(X(w.at)-1.5,H-PAD.b-10,3,10);});
+    /* observations */
+    drawn=[];
+    to.pts.forEach(function(p){var px=X(p.at),py=Y(p.y);drawn.push({x:px,y:py,e:p});
+      ctx.beginPath();ctx.arc(px,py,hot===p.id?6:3.6,0,7);ctx.fillStyle='#f4f6f9';ctx.fill();
+      if(hot===p.id){ctx.beginPath();ctx.arc(px,py,11,0,7);ctx.strokeStyle='#e2b45e';ctx.lineWidth=1.2;ctx.stroke();}});
+    /* upcoming events as hollow rings, shown only in the last steps */
+    results.forEach(function(p){if(!p.soon||!step||!step.future&&!(step.p&&step.p.label==='Fall 2026'))return;var px=X(p.at),py=Y(p.y);drawn.push({x:px,y:py,e:p});
+      ctx.beginPath();ctx.arc(px,py,4,0,7);ctx.setLineDash([2,2]);ctx.strokeStyle='#e2b45e';ctx.lineWidth=1.2;ctx.stroke();ctx.setLineDash([]);});
+    ctx.save();ctx.translate(13,(H-PAD.b+PAD.t)/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillStyle='#7c8695';ctx.fillText('results so far',0,0);ctx.restore();
+  }
+  function animate(now){if(!t0)t0=now;var t=reduce?1:Math.min(1,(now-t0)/dur);draw(t);if(t<1)requestAnimationFrame(animate);}
+  function go(s){
+    if(step===s)return; step=s; from=cur; to=fit(s.cut); t0=0; requestAnimationFrame(animate);
+    var n=to.pts.length, w=to.sd[Math.round((S.nowAt-X0)/(X1-X0)*(G-1))];
+    $('cap').innerHTML=s.future?'Beyond today the band widens to <b>±'+(2*to.sd[G-1]).toFixed(1)+'</b> results by 2028.':'Fitted to <b>'+n+'</b> result'+(n===1?'':'s')+' up to '+(s.p?s.p.label:'the start')+'. Band = mean ± 2σ.';
+  }
+  size(); go(steps[0]);
+  addEventListener('resize',function(){size();draw(1);});
+
+  var els=[].slice.call(document.querySelectorAll('.step'));
+  var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){els.forEach(function(e){e.classList.remove('active');});x.target.classList.add('active');go(steps[+x.target.dataset.i]);}});},{rootMargin:'-45% 0px -45% 0px'});
+  els.forEach(function(e){io.observe(e);});
+
+  /* hover: list item highlights its dot; dot shows a tooltip */
+  document.querySelectorAll('li.came').forEach(function(li){
+    li.addEventListener('mouseenter',function(){hot=li.dataset.e;draw(1);});
+    li.addEventListener('mouseleave',function(){hot=null;draw(1);});
+  });
+  var tip=$('tip');
+  c.addEventListener('mousemove',function(ev){var r=c.getBoundingClientRect(),mx=ev.clientX-r.left,my=ev.clientY-r.top,best=null,bd=144;
+    drawn.forEach(function(d){var dd=(d.x-mx)*(d.x-mx)+(d.y-my)*(d.y-my);if(dd<bd){bd=dd;best=d;}});
+    if(best){tip.innerHTML='<span class="d">'+best.e.when+'</span>'+S.esc(best.e.text);tip.style.opacity=1;tip.style.left=Math.min(best.x+12,W-250)+'px';tip.style.top=(best.y+12)+'px';hot=best.e.id;}else{tip.style.opacity=0;hot=null;}draw(1);});
+  c.addEventListener('mouseleave',function(){tip.style.opacity=0;hot=null;draw(1);});
+
+  /* ---------- papers and the rest ---------- */
+  $('pubs').innerHTML=S.pubs.map(function(p,i){
+    return '<div class="pub"><div class="y mono">'+p.year+'<small>'+(p.review?'UNDER REVIEW':S.thread(p.thread).short.toUpperCase())+'</small></div><div><h3>'+S.esc(p.title)+(p.first?'<span class="badge mono">FIRST AUTHOR</span>':'')+'</h3><div class="au">'+S.authors(p.authors)+'</div><div class="ve">'+S.esc(p.venue)+', '+S.esc(p.detail)+'</div>'+(p.note?'<p class="note">'+S.esc(p.note)+'</p>':'')+
+      '<div class="links mono">'+p.links.map(function(l){return S.link(l[0],l[1]);}).join('')+(p.bib?'<button type="button" data-b="'+i+'" aria-expanded="false">Cite</button>':'')+(p.cites?'<span class="cites">Cited by '+p.cites+'</span>':'')+'</div>'+(p.bib?'<pre class="bib" hidden id="bib'+i+'"><button type="button">Copy</button>'+S.esc(p.bib)+'</pre>':'')+'</div></div>';}).join('');
+  document.querySelectorAll('[data-b]').forEach(function(b){var pre=$('bib'+b.dataset.b);
+    b.addEventListener('click',function(){pre.hidden=!pre.hidden;b.setAttribute('aria-expanded',!pre.hidden);});
+    pre.querySelector('button').addEventListener('click',function(){S.copy(S.pubs[+b.dataset.b].bib,this,pre);});});
+  $('talks').innerHTML=S.talks.map(function(t){return '<div class="row"><div class="k mono">'+t.when+'<small>'+t.kind.toUpperCase()+(t.soon?' · UPCOMING':'')+'</small></div><div><div class="t">'+S.esc(t.title)+'</div><div class="w">'+(t.authors?S.authors(t.authors,'span')+' · ':'')+S.esc(t.where)+(t.url?' · '+S.link('Link',t.url):'')+'</div></div></div>';}).join('');
+  $('pressgrid').innerHTML=S.press.map(function(p){return '<div><span class="mono">'+p.outlet.toUpperCase()+' · '+p.when.toUpperCase()+'</span><h3>'+S.link('"'+p.title+'"',p.url)+'</h3></div>';}).join('');
+  $('edu').innerHTML=S.education.map(function(e){return '<div class="li"><div>'+S.esc(e.what)+'<small>'+S.esc(e.where)+'</small></div><span class="mono">'+e.when+'</span></div>';}).join('');
+  $('hon').innerHTML=S.honors.map(function(e){return '<div class="li"><div>'+S.esc(e.what)+'</div><span class="mono">'+e.when+'</span></div>';}).join('');
+})();
+</script>
+</body>
+</html>

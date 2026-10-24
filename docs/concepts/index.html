@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Site Concepts · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Lora:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  /* Layout: a contact sheet of the five concepts, in the v2 site's own palette. */
+  :root{color-scheme:dark;--bg:#0a0a0c;--raised:#121216;--line:rgba(240,238,230,.12);--ink:#efeee6;--dim:#a9a79c;--faint:#8a887e;--accent:#c9a86a}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 'Lora',Georgia,serif}
+  .wrap{max-width:1120px;margin:0 auto;padding:56px max(18px,env(safe-area-inset-right,0px)) 70px max(18px,env(safe-area-inset-left,0px))}
+  h1{font:400 italic clamp(2.2rem,5vw,3.4rem)/1.05 'Instrument Serif',serif;margin:0 0 12px}
+  .lead{color:var(--dim);max-width:66ch;margin:0 0 10px}
+  .mono{font:400 .74rem 'JetBrains Mono',monospace;letter-spacing:.03em;color:var(--faint)}
+  a{color:var(--ink)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:26px;margin-top:36px}
+  .card{background:var(--raised);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;text-decoration:none;transition:border-color .2s,transform .2s}
+  .card:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .card img{display:block;width:100%;aspect-ratio:8/5;object-fit:cover;object-position:top;border-bottom:1px solid var(--line);max-width:100%}
+  .card .b{padding:18px 20px 20px}
+  .card .n{color:var(--accent)}
+  .card h2{font:400 italic 1.7rem/1.1 'Instrument Serif',serif;margin:4px 0 6px}
+  .card p{color:var(--dim);font-size:.94rem;margin:0 0 10px}
+  .card .why{font-size:.88rem;color:var(--ink);border-left:2px solid var(--accent);padding-left:10px}
+  .base{margin-top:30px}
+  @media (prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="mono">ERFAN NASIRZADEH ORANG · SITE CONCEPTS · OCT 2026</span>
+  <h1>Five ways to tell the same story</h1>
+  <p class="lead">Same facts in every version, from one shared content file built on Google Scholar and the CV. Each concept presents them through something from the research itself.</p>
+  <p class="mono base">Baseline: <a href="../index.html">v2, the current site</a></p>
+
+  <div class="grid">
+    <a class="card" href="posterior.html"><img src="thumbs/posterior.jpg" alt="Posterior concept: scroll story beside a Gaussian process chart"><div class="b"><span class="mono n">01 · POSTERIOR</span><h2>A model of me, fitted live</h2><p>A Distill-style scroll story. As you read each year, a Gaussian process refits to the real count of results; past today the band widens.</p><div class="why">Turns the research question into the reading experience. Strongest for ML and UQ faculty.</div></div></a>
+    <a class="card" href="preprint.html"><img src="thumbs/preprint.jpg" alt="Preprint concept: the site as a research paper"><div class="b"><span class="mono n">02 · PREPRINT</span><h2>The site is a paper</h2><p>Title block, abstract, numbered sections, margin notes, Figure 1 of the path, a Table 1 counted from the data, hover-able citations and BibTeX.</p><div class="why">Instantly legible to professors, quick to skim, prints well, and works in light and dark.</div></div></a>
+    <a class="card" href="transit.html"><img src="thumbs/transit.jpg" alt="Transit concept: research threads as subway lines"><div class="b"><span class="mono n">03 · TRANSIT</span><h2>Research network map</h2><p>Five threads as subway lines, milestones as stations, transfers at the turning points, and Sci ML plus Vis running on to a PhD terminus. Papers on a departures board.</p><div class="why">Shows how the threads connect at a glance. The most memorable to share.</div></div></a>
+    <a class="card" href="activation.html"><img src="thumbs/activation.jpg" alt="Activation concept: fMRI-style heat map of threads by semester"><div class="b"><span class="mono n">04 · ACTIVATION</span><h2>Activation map</h2><p>An fMRI-style heat map: threads by semester, colored by real counts, with Work, Outcomes and All contrasts. Click any cell for what happened.</p><div class="why">A real data visualization, which fits a first-author IEEE VIS paper.</div></div></a>
+    <a class="card" href="notebook.html"><img src="thumbs/notebook.jpg" alt="Notebook concept: lab notebook on graph paper with sketches"><div class="b"><span class="mono n">05 · NOTEBOOK</span><h2>Laboratory notebook</h2><p>Dated entries on graph paper: procedure, a hand-drawn arrow, result. Each entry has a sketch of the actual physics that draws itself as you scroll.</p><div class="why">The warmest and most personal. Honors the lab-bench origin story.</div></div></a>
+  </div>
+</div>
+</body>
+</html>

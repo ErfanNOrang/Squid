@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preprint · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,400&family=Inconsolata:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* Layout: a preprint. One reading column of ~66ch with a right margin for
+     sidenotes (Tufte style); on phones the notes fold into tap-to-open asides. */
+  :root{
+    --paper:#ffffff; --ink:#16171a; --dim:#4a4d55; --faint:#80838c; --rule:#d9dadf; --tint:#f3f4f7;
+    --link:#1f4fa8; --mark:#a3261b;
+    --serif:'STIX Two Text','Times New Roman',serif; --mono:'Inconsolata',ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#17181c;--ink:#e6e6e3;--dim:#b4b5b9;--faint:#868892;--rule:#30323a;--tint:#1f2026;--link:#8fb0ff;--mark:#ff8a7a;color-scheme:dark}}
+  :root[data-theme="dark"]{--paper:#17181c;--ink:#e6e6e3;--dim:#b4b5b9;--faint:#868892;--rule:#30323a;--tint:#1f2026;--link:#8fb0ff;--mark:#ff8a7a;color-scheme:dark}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);font:400 18px/1.62 var(--serif);-webkit-font-smoothing:antialiased;font-variant-numeric:oldstyle-nums}
+  a{color:var(--link);text-decoration:none}
+  a:hover{text-decoration:underline}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+  .page{max-width:1080px;margin:0 auto;padding:0 max(18px,env(safe-area-inset-right,0px)) 0 max(18px,env(safe-area-inset-left,0px));position:relative}
+  .col{max-width:660px}
+  .stamp{position:fixed;left:14px;top:50%;transform:rotate(-90deg) translateX(-50%);transform-origin:left top;font:500 15px var(--mono);color:var(--faint);letter-spacing:.06em;white-space:nowrap;opacity:.8}
+  .runhead{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);font:400 .82rem var(--mono);color:var(--faint);display:flex;justify-content:space-between;gap:12px;padding:10px 0}
+  .runhead span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .runhead nav{display:flex;gap:14px;flex-shrink:0}
+  .runhead nav a{color:var(--faint)}
+
+  header.title{padding:64px 0 10px;text-align:center}
+  header.title .col{margin:0 auto}
+  h1{font-size:clamp(1.7rem,4.2vw,2.35rem);line-height:1.2;font-weight:600;margin:0 0 22px;text-wrap:balance}
+  .authors{font-size:1.08rem}
+  .authors sup{font-size:.65em}
+  .affil{font-size:.92rem;color:var(--dim);margin-top:6px;font-style:italic}
+  .affil a{font-style:normal;font-family:var(--mono)}
+  .fnote{font-size:.85rem;color:var(--dim);margin-top:14px}
+  .fnote b{color:var(--mark);font-weight:500}
+  .abstract{max-width:600px;margin:36px auto 6px;font-size:.95rem;text-align:justify;hyphens:auto}
+  .abstract h2{text-align:center;font-size:1rem;margin:0 0 6px;font-weight:600}
+  .kw{max-width:600px;margin:10px auto 0;font-size:.88rem;color:var(--dim)}
+  .kw b{color:var(--ink)}
+
+  main{padding:20px 0 0}
+  h2.sec{font-size:1.22rem;font-weight:600;margin:48px 0 10px}
+  h2.sec .n{margin-right:.7em}
+  h3.ssec{font-size:1.02rem;font-weight:600;margin:28px 0 6px}
+  p{margin:0 0 .9em;text-align:justify;hyphens:auto}
+  p + p{text-indent:1.5em;margin-top:-.4em}
+  .cite{color:var(--link);cursor:pointer;white-space:nowrap}
+  /* sidenotes */
+  .sn-ref{counter-increment:sn;color:var(--mark);font-size:.7em;vertical-align:super;line-height:0;cursor:pointer}
+  .sn-ref::after{content:counter(sn)}
+  body{counter-reset:sn}
+  .sn{float:right;clear:right;width:260px;margin-right:-310px;font-size:.8rem;line-height:1.45;color:var(--dim);text-align:left;text-indent:0;position:relative}
+  .sn::before{content:attr(data-n)". ";color:var(--mark)}
+  ol.contrib{margin:0 0 1em;padding-left:1.4em}
+  ol.contrib li{margin:.3em 0}
+  ol.contrib b{font-weight:600}
+
+  figure{margin:30px 0;padding:0}
+  .fig{border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);font-size:.86rem}
+  .fig .r{display:grid;grid-template-columns:96px minmax(0,1fr) 28px minmax(0,1fr);gap:0 12px;padding:10px 0;border-top:1px solid var(--rule);align-items:start}
+  .fig .r:first-child{border-top:0}
+  .fig .r.h{font-weight:600;font-size:.8rem;padding:8px 0}
+  .fig .when{font-family:var(--mono);color:var(--mark);font-size:.84rem}
+  .fig ul{list-style:none;margin:0;padding:0}
+  .fig li{margin:0 0 4px;line-height:1.4;color:var(--dim)}
+  .fig li .d{font-family:var(--mono);font-size:.78rem;color:var(--faint);margin-right:6px}
+  .fig li.soon .d::after{content:' (upcoming)'}
+  .fig .arr{color:var(--ink);text-align:center;font-size:1.1rem;line-height:1.2;opacity:0;transform:translateX(-8px);transition:.5s .25s}
+  .fig .r .came{opacity:0;transition:opacity .6s .55s}
+  .fig .r.on .arr,.fig .r.on .came{opacity:1;transform:none}
+  figcaption{font-size:.86rem;color:var(--dim);margin-top:10px;text-align:left}
+  figcaption b{color:var(--ink)}
+  table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:lining-nums tabular-nums}
+  th,td{padding:6px 8px;text-align:right;border-bottom:1px solid var(--rule)}
+  th:first-child,td:first-child{text-align:left}
+  thead th{border-top:1.5px solid var(--ink);border-bottom:1px solid var(--ink);font-weight:600}
+  tbody tr:last-child td{border-bottom:1.5px solid var(--ink)}
+  tfoot td{font-weight:600;border-bottom:1.5px solid var(--ink)}
+  .tbl-wrap{overflow-x:auto}
+
+  ol.refs{list-style:none;padding:0;margin:0;font-size:.9rem}
+  ol.refs li{display:grid;grid-template-columns:2.4em minmax(0,1fr);padding:5px 0}
+  ol.refs li:target{background:var(--tint)}
+  ol.refs .me{font-weight:600}
+  ol.refs .acts{font:400 .8rem var(--mono);margin-top:2px;display:flex;gap:12px;flex-wrap:wrap}
+  ol.refs button{font:inherit;color:var(--link);background:none;border:0;padding:0;cursor:pointer}
+  ol.refs .cb{color:var(--mark)}
+  pre.bib{margin:8px 0 4px;padding:10px 12px;background:var(--tint);font:400 .76rem/1.5 var(--mono);color:var(--dim);overflow-x:auto;position:relative}
+  pre.bib button{position:absolute;right:8px;top:6px}
+  .app li{margin:0 0 8px}
+  .app{font-size:.92rem;padding-left:1.2em}
+  .app .me{font-weight:600}
+  .pop{position:absolute;z-index:20;max-width:360px;background:var(--paper);border:1px solid var(--rule);box-shadow:0 6px 24px rgba(0,0,0,.12);padding:10px 12px;font-size:.82rem;line-height:1.45;color:var(--dim);display:none}
+  .pop .me{font-weight:600;color:var(--ink)}
+  footer{margin:60px 0 0;padding:16px 0 50px;border-top:1px solid var(--rule);font:400 .82rem var(--mono);color:var(--faint)}
+
+  @media (max-width:1100px){
+    .sn{display:none;float:none;width:auto;margin:6px 0 10px;padding:8px 10px;background:var(--tint);border-left:2px solid var(--mark)}
+    .sn.open{display:block}
+    .stamp{display:none}
+  }
+  @media (max-width:640px){
+    body{font-size:17px}
+    p{text-align:left}
+    .runhead span:first-child{display:none}
+    .fig .r{grid-template-columns:1fr;gap:4px}
+    .fig .r.h{display:none}
+    .fig .arr{text-align:left;transform:rotate(90deg);width:20px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.fig .arr,.fig .r .came{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<div class="stamp">erfan [cs.LG] · v2 · 24 Oct 2026</div>
+<div class="page" id="top">
+  <div class="runhead"><span>Nasirzadeh Orang · Teaching models to say how sure they are</span><nav><a href="#s1">§1</a><a href="#s3">Results</a><a href="#refs">Refs</a><a href="#contact">Contact</a></nav></div>
+
+  <header class="title"><div class="col">
+    <h1>Teaching Models to Say How Sure They Are:<br>Four Years of Physics, Photonics and Machine Learning</h1>
+    <div class="authors">Erfan Nasirzadeh Orang<sup>1</sup></div>
+    <div class="affil"><sup>1</sup>Youngstown State University, Youngstown, OH · <a href="mailto:enorang@student.ysu.edu">enorang@student.ysu.edu</a></div>
+    <div class="fnote"><b>●</b> <span id="now"></span> · <a id="sch" target="_blank" rel="noopener">Google Scholar</a> · <a id="li" target="_blank" rel="noopener">LinkedIn</a> · <a id="cv">CV (PDF)</a></div>
+  </div></header>
+
+  <div class="abstract">
+    <h2>Abstract</h2>
+    I am an M.S. student and graduate research assistant at Youngstown State University working on machine learning for physical systems. Across a quantum optics lab, a photonics collaboration, an REU in generative modeling, uncertainty-aware surrogate models and a neural encoding study, one question recurs: how much should we trust what the model says? This page reports the path so far. Its outputs include <span id="npub"></span> papers (one under review, and one first-authored at IEEE VIS 2026), <span id="ntalk"></span> talks and posters, and coverage in <i>Science</i>. The main finding is that the work keeps converging on uncertainty. The main limitation is that I want to study it at PhD depth.
+  </div>
+  <div class="kw"><b>Keywords:</b> uncertainty quantification · Gaussian processes · surrogate models · neural encoding · visualization · biological photonics</div>
+
+  <main class="col">
+    <h2 class="sec" id="s1"><span class="n">1</span>Introduction</h2>
+    <p>I came to Youngstown as an international student, and my first research home was a quantum optics lab full of lasers, vapor cells and noisy signals.</p>
+    <p>That lab, Dr. Michael Crescimanno's, taught me the habit that still drives everything I do: before you believe a result, check how the measurement was made. I wrote automated checks for laser power and magnetic-field drift before trusting a model of chirp asymmetry in Zeeman EIT, and that work became my first paper <span class="cite" data-c="josab"></span>.</p>
+    <p>The same habit followed me into a collaboration on peacock tail feathers that turn out to lase. I built a tool to line up two very different imaging methods before drawing any conclusion about the nanostructure, and the paper ended up in Scientific Reports <span class="cite" data-c="scirep"></span> and in Science's news pages.<span class="sn-ref" data-for="n1"></span><span class="sn" id="n1">"Peacock feathers can be lasers," <a href="https://www.science.org/content/article/peacock-feathers-can-be-lasers" target="_blank" rel="noopener">Science</a>, July 2025. Also covered by The Business Journal and Florida Polytechnic University. A follow-up appeared in Proc. SPIE in 2026.</span></p>
+    <p>From there I moved toward machine learning, first at a Williams College REU on generative models and optimal transport,<span class="sn-ref" data-for="n2"></span><span class="sn" id="n2">Summer 2024, with mentors from Caltech, CUNY and NYU. Our conditional sampling approach improved predictive accuracy for our weather models by 12%.</span> then on surrogate models for batteries and wind turbines <span class="cite" data-c="jtac,wind"></span>, where I used Gaussian process regression for the thing I care about most: not just a prediction, but an honest error bar around it.</p>
+    <p>Now, with Dr. Zack While, I ask the same question about the brain: can a neural encoding model stand in for an expensive fMRI study of how people read charts? It matched the direction of 11 of 14 published effects <span class="cite" data-c="vis"></span>. I'm also starting on the uncertainty side of an open-source finite-element vibrational solver with Dr. Andrew Cooksy at SDSU.<span class="sn-ref" data-for="n3"></span><span class="sn" id="n3">FEMvib. Early stage: uncertainty in Kriging-interpolated potential energy surfaces.</span></p>
+
+    <h2 class="sec" id="s2"><span class="n">2</span>Research program</h2>
+    <p>The contributions so far fall into four threads:</p>
+    <ol class="contrib" id="contrib"></ol>
+
+    <h2 class="sec" id="s3"><span class="n">3</span>Results</h2>
+    <p>Figure 1 lists what I worked on in each period and what came of it. Outcomes are dated when they happened, which is often a year or more after the work, as is normal for papers. Table 1 counts the outputs by year.</p>
+    <figure>
+      <div class="fig" id="fig1"></div>
+      <figcaption><b>Figure 1.</b> The path, year by year. Each row is one academic year or summer; arrows connect the work to its outcomes. Dashed dates are upcoming.</figcaption>
+    </figure>
+    <figure>
+      <div class="tbl-wrap"><table id="tbl1"></table></div>
+      <figcaption><b>Table 1.</b> Outputs by year, counted from the references and Appendix A. Sources: Google Scholar and CV, Oct 2026. Citations to date: <span id="cites"></span>; h-index <span id="h"></span>.</figcaption>
+    </figure>
+
+    <h2 class="sec" id="s4"><span class="n">4</span>Discussion and future work</h2>
+    <p>The threads look different on paper: a vapor cell, a peacock feather, a battery pack, a cortex. The method underneath is the same. I measure carefully, fit a model, and then ask how far to trust it.</p>
+    <p id="contact"><b>Future work.</b> <span id="seek"></span> Correspondence: <a href="mailto:enorang@student.ysu.edu">enorang@student.ysu.edu</a>.</p>
+
+    <h2 class="sec"><span class="n"></span>Acknowledgments</h2>
+    <p>My M.S. is supported by a fully funded graduate research assistantship at Youngstown State University. Travel to IEEE VIS 2026 is supported by the YSU Foundation and a YSU Student USE Fund award.</p>
+
+    <h2 class="sec" id="refs"><span class="n"></span>References</h2>
+    <ol class="refs" id="reflist"></ol>
+
+    <h2 class="sec"><span class="n">A</span>Talks, posters and abstracts</h2>
+    <ol class="app" id="talks"></ol>
+    <h2 class="sec"><span class="n">B</span>Press</h2>
+    <ol class="app" id="press"></ol>
+    <h2 class="sec"><span class="n">C</span>Education, honors and service</h2>
+    <ol class="app" id="bg"></ol>
+
+    <footer>Concept: Preprint · Built from Google Scholar and CV data, Oct 2026 · <a href="#top">Back to top</a></footer>
+  </main>
+</div>
+<div class="pop" id="pop"></div>
+
+<script src="content.js"></script>
+<script>
+(function(){
+  var S=SITE,$=function(i){return document.getElementById(i);};
+  $('now').textContent=S.now; $('seek').textContent=S.seeking;
+  $('sch').href=S.scholar; $('li').href=S.linkedin; $('cv').href=S.cv;
+  $('cites').textContent=S.metrics.citations; $('h').textContent=S.metrics.h;
+  $('npub').textContent=S.pubs.length; $('ntalk').textContent=S.talks.length;
+
+  /* references numbered by order of first citation */
+  var order=[];
+  document.querySelectorAll('.cite').forEach(function(c){c.dataset.c.split(',').forEach(function(id){if(order.indexOf(id)<0)order.push(id);});});
+  S.pubs.forEach(function(p){if(order.indexOf(p.id)<0)order.push(p.id);});
+  function num(id){return order.indexOf(id)+1;}
+  document.querySelectorAll('.cite').forEach(function(c){
+    var ids=c.dataset.c.split(',');
+    c.innerHTML='['+ids.map(function(id){return '<a href="#ref-'+id+'" data-r="'+id+'">'+num(id)+'</a>';}).join(', ')+']';
+  });
+  $('reflist').innerHTML=order.map(function(id,i){var p=S.pub(id);
+    return '<li id="ref-'+id+'"><span>['+(i+1)+']</span><div>'+S.authors(p.authors,'span')+', "'+S.esc(p.title)+'," <i>'+S.esc(p.venue)+'</i>, '+S.esc(p.detail)+'.'+(p.first?' <b>First author.</b>':'')+
+      '<div class="acts">'+p.links.map(function(l){return S.link(l[0],l[1]);}).join('')+(p.bib?'<button type="button" data-b="'+id+'">BibTeX</button>':'')+(p.cites?'<span class="cb">Cited by '+p.cites+'</span>':'')+'</div>'+
+      (p.bib?'<pre class="bib" hidden id="bib-'+id+'"><button type="button">Copy</button>'+S.esc(p.bib)+'</pre>':'')+'</div></li>';}).join('');
+  document.querySelectorAll('[data-b]').forEach(function(b){var pre=$('bib-'+b.dataset.b);
+    b.addEventListener('click',function(){pre.hidden=!pre.hidden;});
+    pre.querySelector('button').addEventListener('click',function(){S.copy(S.pub(b.dataset.b).bib,this,pre);});});
+
+  /* citation popovers */
+  var pop=$('pop');
+  document.querySelectorAll('[data-r]').forEach(function(a){
+    a.addEventListener('mouseenter',function(){var p=S.pub(a.dataset.r),r=a.getBoundingClientRect();
+      pop.innerHTML=S.authors(p.authors,'span')+'. <i>'+S.esc(p.title)+'.</i> '+S.esc(p.venue)+', '+S.esc(p.detail)+'.';
+      pop.style.display='block';pop.style.left=Math.max(8,Math.min(r.left+scrollX-20,innerWidth-380))+'px';pop.style.top=(r.bottom+scrollY+8)+'px';});
+    a.addEventListener('mouseleave',function(){pop.style.display='none';});
+  });
+
+  /* sidenotes: numbered; tap to open on narrow screens */
+  var n=0;
+  document.querySelectorAll('.sn-ref').forEach(function(r){n++;var sn=$(r.dataset.for);sn.dataset.n=n;
+    r.setAttribute('role','button');r.tabIndex=0;r.setAttribute('aria-label','Note '+n);
+    function t(){sn.classList.toggle('open');}
+    r.addEventListener('click',t);r.addEventListener('keydown',function(e){if(e.key==='Enter')t();});});
+
+  /* contributions */
+  $('contrib').innerHTML=S.threads.filter(function(t){return t.id!=='teach';}).map(function(t){
+    var refs=S.pubs.filter(function(p){return p.thread===t.id;}).map(function(p){return '<a href="#ref-'+p.id+'">'+num(p.id)+'</a>';});
+    return '<li><b>'+t.name+'.</b> '+S.esc(t.blurb)+(refs.length?' ['+refs.join(', ')+']':'')+'</li>';}).join('');
+
+  /* Figure 1 */
+  var f='<div class="r h"><span>Period</span><span>What I did</span><span></span><span>What came of it</span></div>';
+  S.periods.forEach(function(p){
+    f+='<div class="r"><div class="when">'+p.label+'</div><ul class="did">'+p.did.map(function(id){var e=S.event(id);return '<li><span class="d">'+e.when+'</span>'+S.esc(e.text)+'</li>';}).join('')+
+      '</ul><div class="arr" aria-hidden="true">⟶</div><ul class="came">'+p.came.map(function(id){var e=S.event(id);return '<li'+(e.soon?' class="soon"':'')+'><span class="d">'+e.when+'</span>'+(e.url?'<a href="'+S.esc(e.url)+'" target="_blank" rel="noopener">'+S.esc(e.text)+'</a>':S.esc(e.text))+'</li>';}).join('')+'</ul></div>';});
+  $('fig1').innerHTML=f;
+  var rows=document.querySelectorAll('.fig .r:not(.h)');
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target);}});},{rootMargin:'0px 0px -25% 0px'});rows.forEach(function(r){io.observe(r);});}
+  else rows.forEach(function(r){r.classList.add('on');});
+
+  /* Table 1, counted from the data */
+  var cols=['Journal','Proceedings / workshop','Under review','Talks & posters'], years={};
+  function add(y,c){years[y]=years[y]||[0,0,0,0];years[y][c]++;}
+  S.pubs.forEach(function(p){add(p.year,p.review?2:(p.id==='spie'||p.id==='vis')?1:0);});
+  S.talks.forEach(function(t){add(+t.when.slice(-4),3);});
+  var ys=Object.keys(years).sort(), tot=[0,0,0,0];
+  var t='<thead><tr><th>Year</th>'+cols.map(function(c){return '<th>'+c+'</th>';}).join('')+'</tr></thead><tbody>';
+  ys.forEach(function(y){t+='<tr><td>'+y+'</td>'+years[y].map(function(v,i){tot[i]+=v;return '<td>'+(v||'·')+'</td>';}).join('')+'</tr>';});
+  t+='</tbody><tfoot><tr><td>Total</td>'+tot.map(function(v){return '<td>'+v+'</td>';}).join('')+'</tr></tfoot>';
+  $('tbl1').innerHTML=t;
+
+  /* appendices */
+  $('talks').innerHTML=S.talks.map(function(x){return '<li><b>'+x.when+'</b>, '+x.kind.toLowerCase()+(x.soon?' (upcoming)':'')+'. "'+S.esc(x.title)+'." '+(x.authors?S.authors(x.authors,'span')+'. ':'')+S.esc(x.where)+'.'+(x.url?' '+S.link('Link',x.url):'')+'</li>';}).join('');
+  $('press').innerHTML=S.press.map(function(x){return '<li>'+S.link('"'+x.title+'"',x.url)+', <i>'+S.esc(x.outlet)+'</i>, '+x.when+'.</li>';}).join('');
+  $('bg').innerHTML=S.education.map(function(e){return '<li><b>'+S.esc(e.what)+'</b> ('+e.when+'). '+S.esc(e.where)+'.</li>';}).join('')+S.honors.map(function(e){return '<li>'+S.esc(e.what)+' ('+e.when+').</li>';}).join('');
+})();
+</script>
+</body>
+</html>

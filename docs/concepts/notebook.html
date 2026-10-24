@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notebook · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Kalam:wght@400;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* Layout: a bound lab notebook. Graph-paper pages with a red margin rule;
+     each period is a dated entry (procedure -> result) with a sketch that
+     draws itself, and handwritten notes in the margin. */
+  :root{
+    --paper:#fdfdfb; --grid:rgba(70,120,190,.13); --grid2:rgba(70,120,190,.22); --margin:#e05a4f;
+    --ink:#1d2330; --dim:#4b5262; --pencil:#6d7484; --pen:#1d4fb8; --hl:rgba(255,226,77,.55); --tape:rgba(214,206,170,.75);
+    --serif:'Literata',Georgia,serif; --hand:'Kalam','Comic Sans MS',cursive; --type:'Courier Prime','Courier New',monospace;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#141a24;--grid:rgba(140,180,240,.07);--grid2:rgba(140,180,240,.13);--margin:#d86a5f;--ink:#e9ecf2;--dim:#b4bccb;--pencil:#8e97a8;--pen:#8db3ff;--hl:rgba(255,214,77,.28);--tape:rgba(120,110,80,.55);color-scheme:dark}}
+  :root[data-theme="dark"]{--paper:#141a24;--grid:rgba(140,180,240,.07);--grid2:rgba(140,180,240,.13);--margin:#d86a5f;--ink:#e9ecf2;--dim:#b4bccb;--pencil:#8e97a8;--pen:#8db3ff;--hl:rgba(255,214,77,.28);--tape:rgba(120,110,80,.55);color-scheme:dark}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);font:400 17.5px/1.65 var(--serif);
+    background-color:var(--paper);
+    background-image:linear-gradient(var(--grid2) 1px,transparent 1px),linear-gradient(90deg,var(--grid2) 1px,transparent 1px),linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:120px 120px,120px 120px,24px 24px,24px 24px}
+  a{color:var(--pen);text-decoration-thickness:1px;text-underline-offset:3px}
+  a:focus-visible,button:focus-visible{outline:2px dashed var(--pen);outline-offset:3px}
+  .book{max-width:1040px;margin:0 auto;position:relative;padding:0 max(18px,env(safe-area-inset-right,0px)) 0 calc(max(18px,env(safe-area-inset-left,0px)) + 78px)}
+  .book::before{content:'';position:absolute;top:0;bottom:0;left:calc(max(18px,env(safe-area-inset-left,0px)) + 58px);width:2px;background:var(--margin);opacity:.65}
+  .holes{position:absolute;left:max(8px,env(safe-area-inset-left,0px));top:0;bottom:0;width:22px;background:radial-gradient(circle at 11px 60px,rgba(0,0,0,.14) 7px,transparent 8px) 0 0/22px 240px repeat-y}
+  .type{font-family:var(--type)}
+  .hand{font-family:var(--hand)}
+  p{max-width:62ch}
+
+  .cover{padding:70px 0 30px}
+  .cover .label{display:inline-block;border:2px solid var(--ink);padding:18px 26px 14px;background:var(--paper);transform:rotate(-.6deg);box-shadow:4px 4px 0 var(--ink)}
+  .cover .label div{font:400 .9rem var(--type);margin:2px 0}
+  .cover .label b{font:400 1.25rem var(--hand);color:var(--pen);margin-left:8px}
+  .cover h1{font:600 clamp(2.2rem,5.6vw,4rem)/1.05 var(--serif);margin:44px 0 18px;max-width:16ch;text-wrap:balance}
+  .cover h1 mark{background:linear-gradient(transparent 55%,var(--hl) 55%);color:inherit;padding:0 .1em}
+  .cover .dek{color:var(--dim);font-size:1.08rem}
+  .cover .links{display:flex;flex-wrap:wrap;gap:8px 20px;font:400 .9rem var(--type);margin-top:18px}
+  .now{display:inline-block;font:700 1.1rem var(--hand);color:var(--margin);transform:rotate(-2deg);margin-top:22px}
+  .now::before{content:'★ '}
+
+  .toc{margin:40px 0 20px;max-width:640px}
+  .toc h2{font:400 .9rem var(--type);letter-spacing:.12em;margin:0 0 6px;color:var(--dim)}
+  .toc ol{list-style:none;margin:0;padding:0}
+  .toc li a{display:flex;align-items:baseline;gap:8px;color:var(--ink);text-decoration:none;padding:3px 0}
+  .toc li a:hover{color:var(--pen)}
+  .toc .dots{flex:1;border-bottom:1.5px dotted var(--pencil);transform:translateY(-4px)}
+  .toc .pg{font:400 .9rem var(--type);color:var(--dim)}
+
+  .entry{position:relative;padding:56px 0 40px;border-top:1.5px solid var(--grid2)}
+  .entry .hd{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font:400 .86rem var(--type);color:var(--dim);border-bottom:1.5px solid var(--ink);padding-bottom:6px;margin-bottom:22px}
+  .entry .hd b{color:var(--ink);font-weight:700}
+  .entry h2{font:600 2rem/1.1 var(--serif);margin:0 0 4px}
+  .entry .aim{font-style:italic;color:var(--dim);margin:0 0 20px}
+  .cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:34px;align-items:start}
+  .lbl{font:700 .82rem var(--type);letter-spacing:.1em;display:block;margin:0 0 6px}
+  ol.proc{margin:0;padding-left:1.3em}
+  ol.proc li{margin:0 0 10px;color:var(--dim)}
+  ol.proc li .d{font:400 .78rem var(--type);color:var(--pencil);display:block}
+  .sketch{position:relative;background:var(--paper);border:1.5px solid var(--pencil);padding:12px 12px 6px;transform:rotate(.8deg);box-shadow:0 2px 0 rgba(0,0,0,.04)}
+  .sketch::before,.sketch::after{content:'';position:absolute;width:70px;height:22px;background:var(--tape);top:-11px}
+  .sketch::before{left:-14px;transform:rotate(-24deg)}
+  .sketch::after{right:-14px;transform:rotate(22deg)}
+  .sketch svg{display:block;width:100%;height:auto;overflow:visible}
+  .sketch svg path,.sketch svg line,.sketch svg circle,.sketch svg rect{fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+  .sketch svg .pen{stroke:var(--pen)}
+  .sketch svg .red{stroke:var(--margin)}
+  .sketch svg .fillpen{fill:var(--pen);stroke:none}
+  .sketch svg .soft{stroke:var(--pencil);stroke-width:1.1}
+  .sketch svg text{font:400 13px var(--hand);fill:var(--pencil);stroke:none}
+  .sketch figcaption{font:400 1rem var(--hand);color:var(--pencil);margin-top:2px}
+  .draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
+  .entry.on .draw{transition:stroke-dashoffset 1.6s ease var(--dl,0s);stroke-dashoffset:0}
+  .arrowrow{display:flex;align-items:center;gap:12px;margin:22px 0 10px}
+  .arrowrow svg{width:120px;height:46px;overflow:visible}
+  .arrowrow path{fill:none;stroke:var(--margin);stroke-width:2.2;stroke-linecap:round}
+  .arrowrow span{font:700 1.15rem var(--hand);color:var(--margin)}
+  .result{border:2px solid var(--ink);padding:14px 18px 10px;background:var(--paper);max-width:760px;position:relative}
+  .result::before{content:'RESULT';position:absolute;top:-11px;left:12px;background:var(--paper);padding:0 6px;font:700 .78rem var(--type);letter-spacing:.12em}
+  .result ul{list-style:none;margin:0;padding:0}
+  .result li{padding:5px 0 5px 26px;position:relative}
+  .result li::before{content:'✓';position:absolute;left:0;top:4px;font:700 1.1rem var(--hand);color:var(--pen)}
+  .result li.soon::before{content:'○';color:var(--margin)}
+  .result li .d{font:400 .78rem var(--type);color:var(--pencil);margin-right:6px}
+  .result li:first-child span.t{background:linear-gradient(transparent 58%,var(--hl) 58%)}
+  .sign{display:flex;gap:30px;flex-wrap:wrap;margin-top:16px;font:400 .8rem var(--type);color:var(--pencil)}
+  .sign i{font:400 1.15rem var(--hand);color:var(--pen);font-style:normal;margin-left:6px}
+  .margin-note{position:absolute;left:-78px;width:70px;top:118px;font:400 .98rem/1.15 var(--hand);color:var(--margin);transform:rotate(-6deg);text-align:right}
+
+  .clips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:26px;margin-top:10px}
+  .clip{background:var(--paper);border:1px solid var(--pencil);padding:16px 16px 12px;font-size:.92rem;position:relative;box-shadow:2px 3px 0 rgba(0,0,0,.05)}
+  .clip:nth-child(1){transform:rotate(-1.4deg)} .clip:nth-child(2){transform:rotate(1deg)} .clip:nth-child(3){transform:rotate(-.6deg)}
+  .clip::before{content:'';position:absolute;width:64px;height:20px;background:var(--tape);top:-10px;left:50%;margin-left:-32px;transform:rotate(-3deg)}
+  .clip .o{font:700 .74rem var(--type);letter-spacing:.08em;color:var(--dim)}
+  .clip h3{font:600 1.08rem/1.3 var(--serif);margin:6px 0 0}
+  .clip h3 a{color:var(--ink)}
+  .bibl{background:var(--paper);border:1px solid var(--pencil);padding:22px 24px;box-shadow:3px 4px 0 rgba(0,0,0,.05);position:relative}
+  .bibl::before{content:'';position:absolute;width:90px;height:22px;background:var(--tape);top:-11px;left:30px;transform:rotate(-4deg)}
+  .bibl ol{margin:0;padding-left:1.6em}
+  .bibl li{margin:0 0 16px;padding-left:4px}
+  .bibl .me{font-weight:600;background:linear-gradient(transparent 58%,var(--hl) 58%)}
+  .bibl .acts{font:400 .82rem var(--type);display:flex;gap:14px;flex-wrap:wrap;margin-top:3px}
+  .bibl button{font:inherit;color:var(--pen);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+  .bibl .c{font:700 1rem var(--hand);color:var(--margin)}
+  .bibl pre{font:400 .74rem/1.5 var(--type);background:rgba(127,127,127,.08);padding:10px;overflow-x:auto;position:relative;margin:8px 0 0}
+  .bibl pre button{position:absolute;right:8px;top:4px}
+  .first{font:700 1rem var(--hand);color:var(--margin);margin-left:6px}
+  h2.sec{font:600 1.7rem var(--serif);margin:0 0 4px}
+  .sec-sub{font:400 1.05rem var(--hand);color:var(--pencil);margin:0 0 22px}
+  section{padding:60px 0 20px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+  .ln{padding:8px 0;border-bottom:1px dashed var(--pencil);font-size:.95rem}
+  .ln .d{font:400 .78rem var(--type);color:var(--pencil);display:block}
+  .ln small{color:var(--dim);font-size:.86rem}
+  .ln small .me{font-weight:600}
+  .found{border:2.5px solid var(--ink);padding:26px 28px;max-width:640px;margin:20px 0 40px;transform:rotate(-.4deg);background:var(--paper)}
+  .found .t{font:700 .9rem var(--type);letter-spacing:.14em}
+  .found .n{font:700 1.8rem var(--hand);color:var(--pen);margin:6px 0 4px}
+  .found p{color:var(--dim);margin:6px 0 14px}
+  .found .links{display:flex;flex-wrap:wrap;gap:8px 20px;font:400 .92rem var(--type)}
+  footer{padding:10px 0 60px;font:400 .8rem var(--type);color:var(--pencil)}
+
+  @media (max-width:820px){
+    .book{padding-left:calc(max(16px,env(safe-area-inset-left,0px)) + 30px)}
+    .book::before{left:calc(max(16px,env(safe-area-inset-left,0px)) + 16px)}
+    .holes{display:none}
+    .cols,.two,.clips{grid-template-columns:1fr}
+    .margin-note{position:static;width:auto;text-align:left;transform:rotate(-2deg);display:inline-block;margin:0 0 10px}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.draw{stroke-dashoffset:0!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="book" id="top">
+  <div class="holes" aria-hidden="true"></div>
+
+  <header class="cover">
+    <div class="label"><div>LABORATORY NOTEBOOK No. 1</div><div>NAME:<b>Erfan Nasirzadeh Orang</b></div><div>STARTED:<b>Aug 2022</b></div><div>INSTITUTION:<b>Youngstown State Univ.</b></div></div>
+    <h1>Teaching models to say <mark>how sure</mark> they are.</h1>
+    <p class="dek" id="dek"></p>
+    <div class="links" id="links"></div>
+    <div class="now" id="now"></div>
+    <nav class="toc" aria-label="Contents"><h2>CONTENTS</h2><ol id="toc"></ol></nav>
+  </header>
+
+  <div id="entries"></div>
+
+  <section id="papers">
+    <h2 class="sec">Bibliography</h2><p class="sec-sub" id="metric"></p>
+    <div class="bibl"><ol id="bibl"></ol></div>
+  </section>
+
+  <section>
+    <h2 class="sec">Clippings</h2><p class="sec-sub">taped in, Jul–Aug 2025</p>
+    <div class="clips" id="clips"></div>
+  </section>
+
+  <section>
+    <div class="two">
+      <div><h2 class="sec">Talks &amp; posters</h2><p class="sec-sub">where I presented the work</p><div id="talks"></div></div>
+      <div><h2 class="sec">Background</h2><p class="sec-sub">education, honors, service</p><div id="bg"></div></div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="found"><div class="t">IF FOUND, PLEASE RETURN TO</div><div class="n">Erfan Nasirzadeh Orang</div><p id="seek"></p><div class="links" id="links2"></div></div>
+  </section>
+  <footer>Concept: Notebook · Entries from my CV and Google Scholar, Oct 2026</footer>
+</div>
+
+<script src="content.js"></script>
+<script>
+(function(){
+  var S=SITE,$=function(i){return document.getElementById(i);};
+  $('now').textContent=S.now; $('dek').textContent=S.dek; $('seek').textContent=S.seeking;
+  var L='<a href="mailto:'+S.email+'">'+S.email+'</a>'+S.link('Google Scholar',S.scholar)+S.link('LinkedIn',S.linkedin)+'<a href="'+S.cv+'">CV</a>';
+  $('links').innerHTML=L; $('links2').innerHTML=L;
+
+  /* ---------- hand-drawn sketches (seeded wobble so they look the same each visit) ---------- */
+  var seed=7; function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647-.5;}
+  function wob(pts,amp){amp=amp==null?1.1:amp;return 'M'+pts.map(function(p){return (p[0]+rnd()*amp).toFixed(1)+','+(p[1]+rnd()*amp).toFixed(1);}).join(' L');}
+  function fn(f,x0,x1,n){var a=[];for(var i=0;i<=n;i++){var x=x0+(x1-x0)*i/n;a.push([x,f(x)]);}return a;}
+  function ellipse(cx,cy,rx,ry){var a=[];for(var i=0;i<=40;i++){var t=i/40*Math.PI*2;a.push([cx+rx*Math.cos(t),cy+ry*Math.sin(t)]);}return a;}
+  function axes(){return '<path class="soft draw" d="'+wob([[20,10],[20,130],[300,130]],.6)+'"/>';}
+  var sketches={
+    '2022–23':{cap:'Fig. 1 · EIT: a narrow transparency window inside the absorption line',svg:axes()+'<path class="pen draw" style="--dl:.3s" d="'+wob(fn(function(x){var u=(x-160)/60;var abs=Math.exp(-u*u);var w=(x-160)/6;return 125-95*abs+70*Math.exp(-w*w);},24,296,90))+'"/><text x="176" y="40">transparency</text><text x="232" y="146">detuning →</text>'},
+    '2023–24':{cap:'Fig. 2 · emission spectrum: broad ASE, then a sharp lasing line',svg:axes()+'<path class="pen draw" style="--dl:.3s" d="'+wob(fn(function(x){var u=(x-170)/55,v=(x-178)/3.5;return 128-36*Math.exp(-u*u)-88*Math.exp(-v*v);},24,296,140),.7)+'"/><text x="190" y="30">lasing line</text><text x="232" y="146">λ →</text>'},
+    'Summer 2024':{cap:'Fig. 3 · optimal transport: moving one distribution onto another',svg:'<path class="draw" d="'+wob(fn(function(x){var u=(x-80)/30;return 120-70*Math.exp(-u*u);},20,150,40))+'"/><path class="pen draw" style="--dl:.4s" d="'+wob(fn(function(x){var u=(x-225)/22,v=(x-265)/14;return 120-50*Math.exp(-u*u)-40*Math.exp(-v*v);},160,300,40))+'"/>'+[60,80,100].map(function(x,i){return '<path class="red draw" style="--dl:'+(0.9+i*.2)+'s" d="'+wob([[x,70],[x+70,40],[x+140,62]],.8)+'"/>';}).join('')+'<line class="soft" x1="16" y1="120" x2="304" y2="120"/>'},
+    '2024–25':{cap:'Fig. 4 · stairs wear deepest where feet land: the middle of each tread',svg:'<path class="draw" d="'+wob([[20,130],[20,104],[70,104],[70,78],[120,78],[120,52],[170,52],[170,26],[230,26]],.5)+'"/><path class="pen draw" style="--dl:.5s" d="'+[[20,104,70],[70,78,120],[120,52,170],[170,26,220]].map(function(s){return wob(fn(function(x){var u=(x-(s[0]+s[2])/2)/12;return s[1]+5*Math.exp(-u*u);},s[0]+2,s[2]-2,14),.4);}).join(' ')+'"/><text x="200" y="80">worn</text>'},
+    '2025–26':{cap:'Fig. 5 · GP surrogate: a prediction with an honest error bar',svg:axes()+'<path class="soft draw" style="--dl:.2s" d="'+wob(fn(function(x){return 70-30*Math.sin(x/40)-Math.min(40,Math.abs(x-150)/4);},24,296,60),.5)+'"/><path class="soft draw" style="--dl:.2s" d="'+wob(fn(function(x){return 70-30*Math.sin(x/40)+Math.min(40,Math.abs(x-150)/4);},24,296,60),.5)+'"/><path class="pen draw" style="--dl:.5s" d="'+wob(fn(function(x){return 70-30*Math.sin(x/40);},24,296,60),.5)+'"/>'+[[100,70-30*Math.sin(2.5)],[150,70-30*Math.sin(3.75)],[200,70-30*Math.sin(5)]].map(function(p){return '<circle class="red" cx="'+p[0]+'" cy="'+p[1].toFixed(1)+'" r="3.5"/>';}).join('')},
+    'Summer 2026':{cap:'Fig. 6 · 14 published effects; the model matched the direction of 11',svg:(function(){var s='';for(var i=0;i<14;i++){var x=24+(i%7)*40,y=i<7?22:78,ok=i<11;s+='<rect class="draw'+(ok?'':' soft')+'" style="--dl:'+(i*.06)+'s" x="'+x+'" y="'+y+'" width="28" height="28" rx="2"/>'+(ok?'<path class="pen draw" style="--dl:'+(.8+i*.08)+'s" d="'+wob([[x+6,y+15],[x+12,y+22],[x+24,y+6]],.6)+'"/>':'<text x="'+(x+8)+'" y="'+(y+20)+'">?</text>');}return s+'<text x="210" y="140">11 / 14</text>';})()},
+    'Fall 2026':{cap:'Fig. 7 · next: how sure is the potential energy surface between the points?',svg:[0,1,2,3,4].map(function(k){var r=18+k*16;return '<path class="'+(k===4?'red ':'pen ')+'draw" style="--dl:'+(k*.2)+'s" d="'+wob(ellipse(160,75,r*1.6,r*.9),.9)+'"/>';}).join('')+'<text x="246" y="20">?</text>'}
+  };
+  var notes={'2022–23':'check the measurement first!','2023–24':'→ Sci Rep + Science news','Summer 2024':'turn toward ML','2024–25':'stairs wear in the middle :)','2025–26':'GPR = honest error bars','Summer 2026':'11/14!','Fall 2026':'next: PhD?'};
+
+  /* ---------- entries ---------- */
+  var html='',toc='';
+  S.periods.forEach(function(p,i){
+    var id='e'+(i+1), sk=sketches[p.label];
+    toc+='<li><a href="#'+id+'"><span>Entry '+(i+1)+' · '+p.label+'</span><span class="dots"></span><span class="pg">p. '+(i+1)+'</span></a></li>';
+    html+='<article class="entry" id="'+id+'"><div class="hd"><span><b>ENTRY '+String(i+1).padStart(2,'0')+'</b> · '+p.label.toUpperCase()+'</span><span>'+p.sub.toUpperCase()+'</span><span>p. '+(i+1)+'</span></div>'+
+      '<div class="margin-note">'+notes[p.label]+'</div>'+
+      '<div class="cols"><div><span class="lbl">PROCEDURE</span><ol class="proc">'+p.did.map(function(id){var e=S.event(id);return '<li><span class="d">'+e.when+'</span>'+S.esc(e.text)+'</li>';}).join('')+'</ol></div>'+
+      '<figure class="sketch" style="margin:0"><svg viewBox="0 0 320 150" role="img" aria-label="'+S.esc(sk.cap)+'">'+sk.svg+'</svg><figcaption>'+sk.cap+'</figcaption></figure></div>'+
+      '<div class="arrowrow" aria-hidden="true"><svg viewBox="0 0 120 46"><path class="draw" style="--dl:.6s" d="'+wob([[4,8],[30,30],[70,36],[110,30]],1.2)+'"/><path class="draw" style="--dl:1.4s" d="'+wob([[98,22],[111,30],[99,40]],.6)+'"/></svg><span>what came of it</span></div>'+
+      '<div class="result"><ul>'+p.came.map(function(id){var e=S.event(id);return '<li'+(e.soon?' class="soon"':'')+'><span class="d">'+e.when+(e.soon?' (upcoming)':'')+'</span><span class="t">'+(e.url?S.link(e.text,e.url):S.esc(e.text))+'</span></li>';}).join('')+'</ul></div>'+
+      '<div class="sign"><span>RECORDED BY<i>E.N.O.</i></span><span>DATE<i>'+p.label+'</i></span></div></article>';
+  });
+  $('entries').innerHTML=html; $('toc').innerHTML=toc+'<li><a href="#papers"><span>Bibliography</span><span class="dots"></span><span class="pg">p. 8</span></a></li><li><a href="#contact"><span>If found, please return to</span><span class="dots"></span><span class="pg">p. 9</span></a></li>';
+
+  /* measure each stroke so it can be drawn on scroll */
+  document.querySelectorAll('.draw').forEach(function(p){var len=0;try{len=p.getTotalLength();}catch(e){}p.style.setProperty('--len',Math.ceil(len)+2);});
+  var ents=document.querySelectorAll('.entry');
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target);}});},{rootMargin:'0px 0px -30% 0px'});ents.forEach(function(e){io.observe(e);});}
+  else ents.forEach(function(e){e.classList.add('on');});
+
+  /* ---------- bibliography and the rest ---------- */
+  $('metric').innerHTML='cited '+S.metrics.citations+' times so far · h-index '+S.metrics.h+' · '+S.link('Google Scholar',S.scholar);
+  $('bibl').innerHTML=S.pubs.map(function(p,i){return '<li>'+S.authors(p.authors,'span')+'. '+(p.year)+'. <i>'+S.esc(p.title)+'.</i> '+S.esc(p.venue)+', '+S.esc(p.detail)+'.'+(p.first?'<span class="first">← first author!</span>':'')+
+    '<div class="acts">'+p.links.map(function(l){return S.link(l[0],l[1]);}).join('')+(p.bib?'<button type="button" data-b="'+i+'">BibTeX</button>':'')+(p.cites?'<span class="c">cited by '+p.cites+'</span>':'')+'</div>'+(p.bib?'<pre hidden id="bib'+i+'"><button type="button">Copy</button>'+S.esc(p.bib)+'</pre>':'')+'</li>';}).join('');
+  document.querySelectorAll('[data-b]').forEach(function(b){var pre=$('bib'+b.dataset.b);
+    b.addEventListener('click',function(){pre.hidden=!pre.hidden;});
+    pre.querySelector('button').addEventListener('click',function(){S.copy(S.pubs[+b.dataset.b].bib,this,pre);});});
+  $('clips').innerHTML=S.press.map(function(p){return '<div class="clip"><span class="o">'+p.outlet.toUpperCase()+' · '+p.when.toUpperCase()+'</span><h3>'+S.link('"'+p.title+'"',p.url)+'</h3></div>';}).join('');
+  $('talks').innerHTML=S.talks.map(function(t){return '<div class="ln"><span class="d">'+t.when+' · '+t.kind.toLowerCase()+(t.soon?' · upcoming':'')+'</span>'+S.esc(t.title)+'<br><small>'+(t.authors?S.authors(t.authors,'span')+' · ':'')+S.esc(t.where)+(t.url?' · '+S.link('link',t.url):'')+'</small></div>';}).join('');
+  $('bg').innerHTML=S.education.map(function(e){return '<div class="ln"><span class="d">'+e.when+'</span>'+S.esc(e.what)+'<br><small>'+S.esc(e.where)+'</small></div>';}).join('')+S.honors.map(function(e){return '<div class="ln"><span class="d">'+e.when+'</span>'+S.esc(e.what)+'</div>';}).join('');
+})();
+</script>
+</body>
+</html>
