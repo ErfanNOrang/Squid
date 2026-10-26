@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tailored · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* Layout: the page opens on the professor's own area. The email link carries
+     #sciml, #vis or #photonics; tabs switch areas; everything else is one line. */
+  .bar{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;padding-block:28px 18px}
+  .bar .btns{margin:0}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 16px}
+  .tabs span{font-size:.84rem;color:var(--ink-3);align-self:center;margin-right:4px}
+  .tab{font:500 .86rem var(--sans);padding:8px 15px;border-radius:999px;border:1px solid var(--edge);background:var(--glass);color:var(--ink-2);cursor:pointer;text-decoration:none}
+  .tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .focus{padding:26px 28px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px}
+  .focus h2{font-size:clamp(1.5rem,3.2vw,2.1rem);letter-spacing:-.02em;line-height:1.1;margin:8px 0 8px}
+  .focus .sum{color:var(--ink-2);margin:0 0 16px}
+  .qdfn{display:grid;grid-template-columns:110px minmax(0,1fr);gap:8px 16px;margin:0;font-size:.92rem}
+  .qdfn dt{font:500 .64rem var(--mono);letter-spacing:.08em;color:var(--accent);padding-top:4px}
+  .qdfn dd{margin:0;color:var(--ink-2)}
+  .side .box{padding:16px 18px;border-radius:14px;background:var(--accent-soft);margin-bottom:14px}
+  .side .box p{margin:6px 0 0;font-size:.95rem;color:var(--ink)}
+  .side .pubi .t{font-size:.9rem}
+  .others{margin-top:16px;padding:6px 24px}
+  .oline{display:flex;gap:14px;align-items:baseline;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--edge);font-size:.92rem;flex-wrap:wrap}
+  .oline:last-child{border-bottom:0}
+  .oline b{font-weight:600}
+  .oline button{font:500 .72rem var(--mono);color:var(--accent);background:none;border:0;cursor:pointer;padding:0}
+  @media (max-width:860px){.focus{grid-template-columns:1fr;padding:20px}.qdfn{grid-template-columns:1fr;gap:2px}.qdfn dd{margin-bottom:8px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="bar"><div id="who"></div></header>
+  <div class="tabs" role="tablist" aria-label="Research area" id="tabs"><span>Your area:</span></div>
+  <section class="focus glass" id="focus" role="tabpanel" aria-live="polite"></section>
+  <section class="others glass" aria-label="Other work">
+    <div id="others"></div>
+    <details id="publications"><summary>All papers, with my role</summary><div id="pubs" style="padding-bottom:12px"></div></details>
+    <details id="talks"><summary>Talks, press and background</summary><div id="bg" style="padding-bottom:12px"></div></details>
+  </section>
+  <footer class="f">Concept 2 · Tailored · open with #sciml, #vis or #photonics to land on that area</footer>
+</main>
+<script src="content.js"></script>
+<script src="kit.js"></script>
+<script>
+(function(){
+  var S=SITE,E=K.E,T=K.T,$=function(i){return document.getElementById(i);};
+  $('who').innerHTML=K.head()+K.notice();
+  var ids=S.areas.map(function(a){return a.id;});
+  $('tabs').insertAdjacentHTML('beforeend',S.areas.map(function(a){return '<a class="tab" role="tab" href="#'+a.id+'" data-a="'+a.id+'" aria-selected="false">'+E(a.name)+'</a>';}).join(''));
+  function show(id,scroll){
+    if(ids.concat('optics').indexOf(id)<0)id=ids[0]; /* optics opens here too, without a tab */
+    var p=K.proj(id), qs=K.questionFor(id);
+    document.querySelectorAll('.tab').forEach(function(t){t.setAttribute('aria-selected',t.dataset.a===id);});
+    $('focus').innerHTML='<div><span class="label">'+E(p.area)+'</span><h2>'+E(p.title)+'</h2><p class="sum">'+T(p.summary)+'</p>'+
+      '<dl class="qdfn"><dt>QUESTION</dt><dd>'+T(p.question)+'</dd><dt>WHAT I DID</dt><dd>'+p.did.map(T).join(' ')+'</dd><dt>WHAT WE FOUND</dt><dd>'+p.found.map(T).join(' ')+'</dd><dt>WHAT\'S NEXT</dt><dd>'+p.next.map(T).join(' ')+'</dd></dl>'+
+      (p.earlier?'<p class="muted" style="font-size:.86rem;margin:14px 0 0">'+T(p.earlier)+'</p>':'')+'</div>'+
+      '<div class="side">'+(qs.length?'<div class="box"><span class="label">What I\'d like to work on next · draft</span>'+qs.map(function(q){return '<p>'+T(q.q)+'</p>';}).join('')+'</div>':'')+
+      '<span class="label">Papers from this work</span>'+p.pubs.map(function(id){return K.pubItem(K.pub(id),{noAuthors:false});}).join('')+'</div>';
+    $('others').innerHTML=S.projects.filter(function(x){return x.id!==id;}).map(function(x){
+      return '<div class="oline"><span><b>'+E(x.area)+'.</b> <span class="muted">'+T(x.summary)+'</span></span>'+'<button type="button" data-go="'+x.id+'">Open →</button></div>';}).join('');
+    if(scroll)$('tabs').scrollIntoView({block:'start'});
+  }
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('.tab'); if(t){e.preventDefault();history.replaceState(null,'','#'+t.dataset.a);show(t.dataset.a);}
+    var g=e.target.closest('[data-go]'); if(g){history.replaceState(null,'','#'+g.dataset.go);show(g.dataset.go,true);}
+  });
+  addEventListener('hashchange',function(){show(location.hash.slice(1));});
+  show(location.hash.slice(1));
+  $('pubs').innerHTML=S.pubs.map(function(p){return K.pubItem(p);}).join('');
+  $('bg').innerHTML=S.talks.map(function(t){return '<div class="oline"><span>'+(t.url?S.link(t.title,t.url):E(t.title))+'</span><span class="faint mono" style="font-size:.74rem">'+E(t.when)+'</span></div>';}).join('')+
+    S.press.map(function(p){return '<div class="oline"><span>'+S.link(p.title,p.url)+' <span class="faint">· '+E(p.outlet)+'</span></span><span class="faint mono" style="font-size:.74rem">'+E(p.when)+'</span></div>';}).join('')+
+    S.background.education.map(function(e){return '<div class="oline"><span>'+E(e.what)+' <span class="faint">· '+T(e.where)+'</span></span><span class="faint mono" style="font-size:.74rem">'+E(e.when)+'</span></div>';}).join('');
+  K.wire();
+})();
+</script>
+</body>
+</html>

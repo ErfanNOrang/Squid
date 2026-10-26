@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tiers · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* Layout: the reader picks their depth. Three labeled tiers: 30 seconds
+     (the decision), 3 minutes (the work), 10 minutes (everything, folded). */
+  .tiernav{position:sticky;top:max(10px,env(safe-area-inset-top,0px));z-index:20;display:flex;justify-content:center;margin:16px 0 0}
+  .tiernav div{display:flex;gap:4px;padding:5px;border-radius:999px}
+  .tiernav a{font:500 .8rem var(--sans);padding:6px 13px;border-radius:999px;text-decoration:none;color:var(--ink-2)}
+  .tiernav a.on{background:var(--ink);color:var(--bg)}
+  .tier{padding-block:26px 8px;scroll-margin-top:64px}
+  .tlabel{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .tlabel .clock{font:600 .78rem var(--mono);color:var(--bg);background:var(--accent);border-radius:999px;padding:3px 10px}
+  .tlabel span:last-child{color:var(--ink-3);font-size:.86rem}
+  .t30{padding:26px 28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}
+  .t30 ul{margin:0;padding:0;list-style:none}
+  .t30 li{padding:8px 0 8px 22px;position:relative;font-size:.94rem;color:var(--ink-2);border-bottom:1px solid var(--edge)}
+  .t30 li:last-child{border-bottom:0}
+  .t30 li::before{content:'✓';position:absolute;left:0;top:7px;color:var(--teal);font-weight:700}
+  .t30 li b{color:var(--ink);font-weight:600}
+  .t3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .c{padding:18px 18px 16px;scroll-margin-top:64px}
+  .c h3{font-size:1.05rem;margin:6px 0 10px;line-height:1.25}
+  .c dl{margin:0;font-size:.86rem}
+  .c dt{font:500 .6rem var(--mono);letter-spacing:.08em;color:var(--accent);margin-top:9px}
+  .c dt:first-child{margin-top:0}
+  .c dd{margin:2px 0 0;color:var(--ink-2)}
+  .c .kp{margin-top:12px;font-size:.8rem;color:var(--ink-3)}
+  .t10{padding:4px 24px}
+  .t10 .in{padding:0 0 14px;font-size:.92rem;color:var(--ink-2)}
+  .t10 dl{margin:0}
+  .t10 dt{font:500 .62rem var(--mono);letter-spacing:.08em;color:var(--accent);margin-top:10px}
+  .t10 dd{margin:2px 0 0}
+  @media (max-width:860px){.t30,.t3{grid-template-columns:1fr}.t30{padding:20px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <nav class="tiernav" aria-label="Reading depth"><div class="glass"><a href="#t30" class="on">30 sec</a><a href="#t3">3 min</a><a href="#t10">10 min</a></div></nav>
+  <section class="tier" id="t30">
+    <div class="tlabel"><span class="clock">30 SEC</span><span>Who I am, what I want, why it might fit</span></div>
+    <div class="t30 glass"><div id="who"></div><div><span class="label" id="seek-areas"></span><ul id="glance" style="margin-top:8px"></ul></div></div>
+  </section>
+  <section class="tier" id="t3">
+    <div class="tlabel"><span class="clock">3 MIN</span><span>The work in each area: question, my part, result</span></div>
+    <div class="t3" id="cards"></div>
+  </section>
+  <section class="tier" id="t10">
+    <div class="tlabel"><span class="clock">10 MIN</span><span>Everything else, folded until you want it</span></div>
+    <div class="t10 glass" id="deep"></div>
+  </section>
+  <footer class="f">Concept 5 · Tiers · facts from Google Scholar and CV</footer>
+</main>
+<script src="content.js"></script>
+<script src="kit.js"></script>
+<script>
+(function(){
+  var S=SITE,E=K.E,T=K.T,$=function(i){return document.getElementById(i);};
+  $('who').innerHTML=K.head()+K.notice();
+  $('seek-areas').textContent='Areas: '+S.areas.map(function(a){return a.name;}).join(' · ');
+  $('glance').innerHTML=K.glance().map(function(g){return '<li>'+g+'</li>';}).join('');
+  $('cards').innerHTML=K.areaProjects().map(function(p){var kp=K.pub(p.pubs[0]);
+    return '<article class="c glass" id="'+p.id+'"><span class="label">'+E(p.area)+'</span><h3>'+E(p.title)+'</h3><dl><dt>QUESTION</dt><dd>'+T(p.question)+'</dd><dt>MY PART</dt><dd>'+T(K.part(p))+'</dd><dt>RESULT</dt><dd>'+T(K.result(p))+'</dd></dl>'+
+      '<div class="kp">'+E(kp.role)+' · '+K.link(kp,E(K.SHORT[kp.id]))+'</div></article>';}).join('');
+  function proj(p){return '<details id="'+(p.id==='optics'?'optics':'more-'+p.id)+'"><summary>'+E(p.title)+' <span class="faint" style="font-weight:400;font-size:.84rem;margin-left:auto;margin-right:10px">'+E(p.area)+'</span></summary><div class="in"><dl><dt>QUESTION</dt><dd>'+T(p.question)+'</dd><dt>WHAT I DID</dt><dd>'+p.did.map(T).join(' ')+'</dd><dt>WHAT WE FOUND</dt><dd>'+p.found.map(T).join(' ')+'</dd><dt>WHAT\'S NEXT</dt><dd>'+p.next.map(T).join(' ')+'</dd></dl>'+(p.earlier?'<p>'+T(p.earlier)+'</p>':'')+'</div></details>';}
+  $('deep').innerHTML='<details id="questions"><summary>Questions I want to work on in a PhD (draft)</summary><ol class="in" style="padding-left:30px">'+S.questions.map(function(q){return '<li style="margin:5px 0">'+T(q.q)+'</li>';}).join('')+'</ol></details>'+
+    S.projects.map(proj).join('')+
+    '<details id="publications"><summary>All papers, with BibTeX</summary><div class="in">'+S.pubs.map(function(p){return K.pubItem(p);}).join('')+'</div></details>'+
+    '<details id="talks"><summary>Talks and press</summary><div class="in">'+S.talks.map(function(t){return '<div class="pubi"><div class="t" style="font-weight:500">'+(t.url?S.link(t.title,t.url):E(t.title))+'</div><div class="m">'+E(t.kind)+' · '+E(t.where)+' · '+E(t.when)+'</div></div>';}).join('')+S.press.map(function(p){return '<div class="pubi"><div class="t" style="font-weight:500">'+S.link(p.title,p.url)+'</div><div class="m">'+E(p.outlet)+' · '+E(p.when)+'</div></div>';}).join('')+'</div></details>'+
+    '<details id="background"><summary>Education, teaching and service</summary><div class="in">'+S.background.education.concat(S.background.teaching,S.background.honors).map(function(e){return '<div class="pubi"><div class="t" style="font-weight:500">'+E(e.what)+'</div><div class="m">'+(e.where?T(e.where)+' · ':'')+E(e.when)+'</div></div>';}).join('')+'</div></details>';
+  /* highlight the tier in view */
+  var links=document.querySelectorAll('.tiernav a');
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id);});});},{rootMargin:'-40% 0px -55% 0px'});
+  ['t30','t3','t10'].forEach(function(id){io.observe($(id));});
+  K.wire();
+})();
+</script>
+</body>
+</html>

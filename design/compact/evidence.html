@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evidence · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* Layout: one compact header, then the whole record as a scannable table:
+     one row per project, the same five questions answered in every row.
+     On phones each row becomes a labeled card. */
+  .hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px 28px;flex-wrap:wrap;padding-block:28px 20px}
+  .hd .thread{font:italic 400 1.5rem/1.2 var(--serif);margin:0;max-width:22ch}
+  .hd .thread em{color:var(--accent)}
+  .tbl{padding:6px 8px;overflow:hidden}
+  table{border-collapse:collapse;width:100%;font-size:.88rem}
+  thead th{font:500 .64rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);text-align:left;padding:12px 12px 10px;border-bottom:1px solid var(--edge-hi)}
+  tbody tr{border-bottom:1px solid var(--edge);cursor:pointer}
+  tbody tr:last-child{border-bottom:0}
+  tbody tr:hover{background:var(--glass)}
+  td{padding:14px 12px;vertical-align:top;color:var(--ink-2)}
+  td.area b{display:block;color:var(--ink);font-weight:600;font-size:.95rem;line-height:1.3}
+  td.area span{font:400 .66rem var(--mono);color:var(--ink-3);letter-spacing:.04em}
+  td .clip{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  tr.open td .clip{-webkit-line-clamp:unset;display:block}
+  td.res{color:var(--ink)}
+  td.out a{color:var(--ink);text-decoration:none;font-weight:500}
+  td.out .role{margin-top:4px}
+  .hint{font-size:.78rem;color:var(--ink-3);margin:8px 4px 0}
+  .below{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+  .below>div{padding:18px 20px}
+  .below ol{margin:8px 0 0;padding-left:18px;font-size:.9rem;color:var(--ink-2)}
+  .below li{margin:5px 0}
+  .stat{display:flex;gap:10px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--edge);font-size:.9rem;color:var(--ink-2)}
+  .stat:last-child{border-bottom:0}
+  .stat b{font:600 1.3rem var(--sans);color:var(--ink);min-width:28px}
+  @media (max-width:860px){
+    thead{display:none}
+    table,tbody,tr,td{display:block;width:100%}
+    tbody tr{padding:10px 4px;cursor:default}
+    td{padding:4px 8px}
+    td[data-h]::before{content:attr(data-h);display:block;font:500 .6rem var(--mono);letter-spacing:.08em;color:var(--accent);margin-top:6px}
+    td .clip{-webkit-line-clamp:unset;display:block}
+    .hint{display:none}
+    .below{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hd"><div id="who"></div><p class="thread">Teaching models to say <em>how sure</em> they are.</p></header>
+  <div class="tbl glass" id="research"><table><thead><tr><th style="width:17%">Area</th><th style="width:21%">Question</th><th style="width:24%">What I did</th><th style="width:20%">Result</th><th style="width:18%">Output · role</th></tr></thead><tbody id="rows"></tbody></table></div>
+  <p class="hint">Click a row to read it in full.</p>
+  <section class="below">
+    <div class="glass"><span class="label">Questions I want to work on · draft</span><ol id="qs"></ol></div>
+    <div class="glass"><span class="label">Record</span><div id="stats" style="margin-top:6px"></div></div>
+  </section>
+  <section class="glass" style="margin-top:16px;padding:6px 20px">
+    <details id="publications"><summary>All papers, with BibTeX</summary><div id="pubs" style="padding-bottom:12px"></div></details>
+    <details id="talks"><summary>Talks, press and background</summary><div id="bg" style="padding-bottom:12px"></div></details>
+  </section>
+  <footer class="f">Concept 4 · Evidence · facts from Google Scholar and CV</footer>
+</main>
+<script src="content.js"></script>
+<script src="kit.js"></script>
+<script>
+(function(){
+  var S=SITE,E=K.E,T=K.T,$=function(i){return document.getElementById(i);};
+  $('who').innerHTML=K.head()+K.notice();
+  $('rows').innerHTML=S.projects.map(function(p){
+    var outs=p.pubs.map(function(id){var x=K.pub(id);return '<div>'+K.link(x,E(K.SHORT[x.id]))+' <span class="role'+(/first/i.test(x.role)?' first':'')+'">'+E(x.role.replace(' author',''))+'</span></div>';}).join('');
+    return '<tr id="'+p.id+'" tabindex="0"><td class="area" data-h="AREA"><b>'+E(p.title)+'</b><span>'+E(p.area.toUpperCase())+'</span></td>'+
+      '<td data-h="QUESTION"><div class="clip">'+T(p.question)+'</div></td><td data-h="WHAT I DID"><div class="clip">'+p.did.map(T).join(' ')+'</div></td>'+
+      '<td class="res" data-h="RESULT"><div class="clip">'+p.found.map(T).join(' ')+'</div></td><td class="out" data-h="OUTPUT · ROLE">'+outs+'</td></tr>';}).join('');
+  document.querySelectorAll('#rows tr').forEach(function(tr){
+    function t(e){if(e&&e.target.closest('a'))return;tr.classList.toggle('open');}
+    tr.addEventListener('click',t); tr.addEventListener('keydown',function(e){if(e.key==='Enter')t();});
+  });
+  var hash=location.hash.slice(1); if(hash&&$(hash)&&$(hash).tagName==='TR')$(hash).classList.add('open');
+  $('qs').innerHTML=S.questions.map(function(q){return '<li>'+T(q.q)+'</li>';}).join('');
+  var pubd=S.pubs.filter(function(p){return !p.review;}).length;
+  $('stats').innerHTML=[[K.firsts.length,'first-author paper ('+E(K.firsts[0].venue)+')'],[pubd-K.firsts.length,'published papers as contributing author'],[S.pubs.length-pubd,'paper under review'],[S.talks.filter(function(t){return !t.soon;}).length,'talks and posters given'],[S.press.length,'press stories, including Science']]
+    .map(function(s){return '<div class="stat"><b>'+s[0]+'</b><span>'+s[1]+'</span></div>';}).join('');
+  $('pubs').innerHTML=S.pubs.map(function(p){return K.pubItem(p);}).join('');
+  $('bg').innerHTML=S.talks.map(function(t){return '<div class="pubi"><div class="t" style="font-weight:500">'+(t.url?S.link(t.title,t.url):E(t.title))+'</div><div class="m">'+E(t.kind)+' · '+E(t.where)+' · '+E(t.when)+'</div></div>';}).join('')+
+    S.background.education.map(function(e){return '<div class="pubi"><div class="t" style="font-weight:500">'+E(e.what)+'</div><div class="m">'+T(e.where)+' · '+E(e.when)+'</div></div>';}).join('');
+  K.wire();
+})();
+</script>
+</body>
+</html>

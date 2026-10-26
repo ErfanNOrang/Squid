@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Classic · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* Layout: the academic homepage professors already know. A sticky profile
+     column on the left; bio, interests, news and selected papers on the right. */
+  .page{display:grid;grid-template-columns:300px minmax(0,1fr);gap:40px;padding-block:36px 20px;align-items:start}
+  .side{position:sticky;top:20px;padding:24px}
+  .side .id{flex-direction:column;align-items:flex-start}
+  .side .avatar{width:96px;height:96px;font-size:2.4rem}
+  .side .btns{flex-direction:column;align-items:stretch}
+  .side .btns .btn{justify-content:center}
+  .side .areas{margin-top:16px}
+  .side .areas a{display:block;padding:6px 0;font-size:.88rem;color:var(--ink-2);text-decoration:none;border-top:1px solid var(--edge)}
+  .side .areas a:hover{color:var(--accent)}
+  .main h2{font-size:.72rem;font:500 .7rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:30px 0 10px}
+  .main h2:first-child{margin-top:4px}
+  .bio{font-size:1.05rem;line-height:1.65;color:var(--ink);margin:0}
+  .bio + .bio{margin-top:10px;color:var(--ink-2);font-size:.98rem}
+  .ints{display:grid;gap:10px}
+  .int{padding:14px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;scroll-margin-top:16px}
+  .int b{font-weight:600}
+  .int .s{grid-column:1 / -1;font-size:.9rem;color:var(--ink-2)}
+  .int .kp{font:400 .72rem var(--mono);color:var(--ink-3);text-align:right}
+  .int details{grid-column:1 / -1;border-top:1px solid var(--edge);margin-top:6px}
+  .int details summary{font-size:.84rem;font-weight:500;padding:8px 0;color:var(--ink-2)}
+  .int dl{margin:0 0 8px;font-size:.88rem}
+  .int dt{font:500 .62rem var(--mono);letter-spacing:.08em;color:var(--accent);margin-top:8px}
+  .int dd{margin:2px 0 0;color:var(--ink-2)}
+  .news{margin:0;padding:0;list-style:none}
+  .news li{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:7px 0;border-bottom:1px solid var(--edge);font-size:.92rem;color:var(--ink-2)}
+  .news li:last-child{border-bottom:0}
+  .news .d{font:400 .74rem var(--mono);color:var(--accent);padding-top:2px}
+  @media (max-width:880px){.page{grid-template-columns:1fr;gap:16px;padding-top:18px}.side{position:static;padding:18px}.side .id{flex-direction:row;align-items:center}.side .avatar{width:56px;height:56px;font-size:1.5rem}.side .btns{flex-direction:row}.side .areas{display:none}.news li{grid-template-columns:1fr;gap:0}}
+</style>
+</head>
+<body>
+<div class="wrap page">
+  <aside class="side glass" id="side"></aside>
+  <main class="main">
+    <h2>About</h2>
+    <p class="bio" id="bio"></p>
+    <p class="bio" id="seekp"></p>
+    <h2 id="research">Research</h2>
+    <div class="ints" id="ints"></div>
+    <h2>News</h2>
+    <ul class="news" id="news"></ul>
+    <h2 id="publications">Publications</h2>
+    <div id="pubs"></div>
+    <details id="questions" style="margin-top:20px"><summary>Questions I want to work on in a PhD (draft)</summary><ol id="qs" style="margin:0 0 14px;padding-left:18px;color:var(--ink-2);font-size:.92rem"></ol></details>
+    <details id="talks"><summary>Talks, press and background</summary><div id="bg" style="padding-bottom:14px"></div></details>
+    <footer class="f">Concept 3 · Classic · facts from Google Scholar and CV</footer>
+  </main>
+</div>
+<script src="content.js"></script>
+<script src="kit.js"></script>
+<script>
+(function(){
+  var S=SITE,E=K.E,T=K.T,$=function(i){return document.getElementById(i);};
+  $('side').innerHTML=K.head({noLinkedIn:false})+'<div class="areas">'+S.projects.map(function(p){return '<a href="#'+p.id+'">'+E(p.area==='Supporting background'?'Quantum optics (background)':p.area)+' →</a>';}).join('')+'</div>'+K.notice();
+  $('bio').innerHTML=T(S.abstract);
+  $('seekp').innerHTML='I\'m looking for a PhD position in '+S.areas.map(function(a){return E(a.name);}).join(', ').replace(/, ([^,]*)$/,' or $1')+', available to start Fall 2027 or Spring 2028.';
+  $('ints').innerHTML=S.projects.map(function(p){var kp=K.pub(p.pubs[0]);
+    return '<div class="int glass" id="'+p.id+'"><b>'+E(p.title)+'</b><span class="kp">'+E(kp.role)+' · '+K.link(kp,E(K.SHORT[kp.id]))+'</span><span class="s">'+T(p.summary)+' <span style="color:var(--ink)">'+T(K.result(p))+'</span></span>'+
+      '<details><summary>My part and what\'s next</summary><dl><dt>QUESTION</dt><dd>'+T(p.question)+'</dd><dt>WHAT I DID</dt><dd>'+p.did.map(T).join(' ')+'</dd><dt>WHAT WE FOUND</dt><dd>'+p.found.map(T).join(' ')+'</dd><dt>NEXT</dt><dd>'+p.next.map(T).join(' ')+'</dd></dl></details></div>';}).join('');
+  $('news').innerHTML=K.recent(5).map(function(e){return '<li><span class="d">'+E(e.when)+(e.soon?' · soon':'')+'</span><span>'+(e.url?S.link(e.text,e.url):E(e.text))+'</span></li>';}).join('');
+  $('pubs').innerHTML=S.pubs.map(function(p){return K.pubItem(p,{part:'#'+p.project});}).join('');
+  $('qs').innerHTML=S.questions.map(function(q){return '<li>'+T(q.q)+'</li>';}).join('');
+  $('bg').innerHTML=S.talks.map(function(t){return '<div class="pubi"><div class="t" style="font-weight:500">'+(t.url?S.link(t.title,t.url):E(t.title))+'</div><div class="m">'+E(t.kind)+' · '+E(t.where)+' · '+E(t.when)+'</div></div>';}).join('')+
+    S.press.map(function(p){return '<div class="pubi"><div class="t" style="font-weight:500">'+S.link(p.title,p.url)+'</div><div class="m">'+E(p.outlet)+' · '+E(p.when)+'</div></div>';}).join('');
+  K.wire();
+})();
+</script>
+</body>
+</html>

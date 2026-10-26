@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Brief · Erfan Nasirzadeh Orang</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kit.css">
+<style>
+  /* Layout: one screen decides it. Identity + "at a glance" on top, three area
+     cards below, each expanding in place; everything else folded underneath. */
+  .top{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px;padding-block:34px 18px;align-items:stretch}
+  .who{padding:24px}
+  .glance{padding:22px 24px}
+  .glance ul{margin:10px 0 0;padding:0;list-style:none}
+  .glance li{padding:7px 0 7px 18px;position:relative;font-size:.92rem;color:var(--ink-2);border-bottom:1px solid var(--edge)}
+  .glance li:last-child{border-bottom:0}
+  .glance li::before{content:'';position:absolute;left:0;top:14px;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .glance li b{color:var(--ink);font-weight:600}
+  .glance .thread{font:italic 400 1.35rem/1.25 var(--serif);margin:4px 0 0;color:var(--ink)}
+  .glance .thread em{color:var(--accent)}
+  .areas{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+  .card{padding:20px 20px 6px;display:flex;flex-direction:column;scroll-margin-top:16px}
+  .card h2{font-size:1.15rem;line-height:1.25;margin:6px 0 8px;letter-spacing:-.01em}
+  .card .sum{font-size:.9rem;color:var(--ink-2);margin:0 0 10px}
+  .card .res{font-size:.88rem;margin:0 0 10px;padding:9px 11px;border-radius:10px;background:var(--accent-soft);color:var(--ink)}
+  .card .res b{font:500 .62rem var(--mono);letter-spacing:.08em;color:var(--accent);display:block;margin-bottom:2px}
+  .card .kp{font-size:.82rem;color:var(--ink-3);margin:0 0 6px}
+  .card .kp a{color:var(--ink-2)}
+  .card details{margin-top:auto}
+  .card dl{margin:0 0 12px;font-size:.86rem}
+  .card dt{font:500 .62rem var(--mono);letter-spacing:.08em;color:var(--accent);margin-top:10px}
+  .card dd{margin:2px 0 0;color:var(--ink-2)}
+  .more{margin:22px 0 0;padding:6px 24px}
+  .more .inner{padding:0 0 14px}
+  .qs{margin:0;padding-left:18px;font-size:.92rem;color:var(--ink-2)}
+  .qs li{margin:6px 0}
+  .row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--edge);font-size:.9rem}
+  .row:last-child{border-bottom:0}
+  .row span:last-child{font:400 .74rem var(--mono);color:var(--ink-3);white-space:nowrap}
+  @media (max-width:860px){.top,.areas{grid-template-columns:1fr}.top{padding-top:22px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="top">
+    <div class="who glass" id="who"></div>
+    <div class="glance glass"><span class="label">At a glance</span><p class="thread">Teaching models to say <em>how sure</em> they are.</p><ul id="glance"></ul></div>
+  </section>
+  <section class="areas" id="areas" aria-label="Research areas"></section>
+  <section class="more glass" aria-label="More">
+    <details><summary>Questions I want to work on in a PhD <span class="label" style="margin-left:auto;margin-right:10px">Draft</span></summary><div class="inner"><ol class="qs" id="qs"></ol></div></details>
+    <details id="publications"><summary>All papers, with my role</summary><div class="inner" id="pubs"></div></details>
+    <details id="optics"><summary>Supporting background: quantum optics</summary><div class="inner" id="opt"></div></details>
+    <details id="talks"><summary>Talks, press and background</summary><div class="inner" id="bg"></div></details>
+  </section>
+  <footer class="f">Concept 1 · Brief · facts from Google Scholar and CV</footer>
+</main>
+<script src="content.js"></script>
+<script src="kit.js"></script>
+<script>
+(function(){
+  var S=SITE,E=K.E,T=K.T,$=function(i){return document.getElementById(i);};
+  $('who').innerHTML=K.head()+K.notice();
+  $('glance').innerHTML=K.glance().map(function(g){return '<li>'+g+'</li>';}).join('');
+  function card(p){var kp=K.pub(p.pubs[0]);
+    return '<article class="card glass" id="'+p.id+'"><span class="label">'+E(p.area)+'</span><h2>'+E(p.title)+'</h2><p class="sum">'+T(p.summary)+'</p>'+
+      '<p class="res"><b>RESULT</b>'+T(K.result(p))+'</p><p class="kp">'+(kp.role)+' · '+K.link(kp,E(K.SHORT[kp.id]))+(p.pubs.length>1?' + '+(p.pubs.length-1)+' more':'')+'</p>'+
+      '<details><summary>Question, my part, what\'s next</summary><dl><dt>QUESTION</dt><dd>'+T(p.question)+'</dd><dt>WHAT I DID</dt><dd>'+p.did.map(T).join(' ')+'</dd><dt>WHAT WE FOUND</dt><dd>'+p.found.map(T).join(' ')+'</dd><dt>NEXT</dt><dd>'+p.next.map(T).join(' ')+'</dd></dl></details></article>';}
+  $('areas').innerHTML=K.areaProjects().map(card).join('');
+  $('qs').innerHTML=S.questions.map(function(q){return '<li>'+T(q.q)+'</li>';}).join('');
+  $('pubs').innerHTML=S.pubs.map(function(p){return K.pubItem(p,{part:'#'+p.project});}).join('');
+  var o=K.proj('optics'); $('opt').innerHTML='<p class="muted" style="margin:0 0 8px">'+T(o.summary)+'</p><p class="muted" style="margin:0">'+o.did.map(T).join(' ')+'</p>';
+  $('bg').innerHTML=S.talks.map(function(t){return '<div class="row"><span>'+(t.url?S.link(t.title,t.url):E(t.title))+'</span><span>'+E(t.when)+'</span></div>';}).join('')+
+    S.press.map(function(p){return '<div class="row"><span>'+S.link(p.title,p.url)+' <span class="faint">· '+E(p.outlet)+'</span></span><span>'+E(p.when)+'</span></div>';}).join('')+
+    S.background.education.map(function(e){return '<div class="row"><span>'+E(e.what)+'</span><span>'+E(e.when)+'</span></div>';}).join('');
+  K.wire();
+})();
+</script>
+</body>
+</html>
