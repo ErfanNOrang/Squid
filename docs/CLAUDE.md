@@ -5,17 +5,23 @@ The site's job: help Erfan Nasirzadeh Orang get a funded PhD starting Fall 2027 
 ## Stack
 - Plain static site for GitHub Pages: `index.html` (renders), `content.js` (all text and data), `cv.pdf`, `assets/` (headshot, figures).
 - No build step, no frameworks. Edit text in `content.js`, not in `index.html`.
-- Fonts: Instrument Serif (headings), Lora (body), JetBrains Mono (labels).
-- Palette: near-black `#0a0a0c`, warm ink `#efeee6`, gold accent `#c9a86a`. Dark only.
-- Archived, not public: `../design/v2/` (old site) and `../design/concepts/` (five design concepts).
+- Fonts: system SF on Apple devices, Inter elsewhere (headlines, body); Instrument Serif italic for accents; JetBrains Mono for labels.
+- Archived, not public: `../design/v2/`, `../design/v3/` (preprint layout), `../design/concepts/` (five design concepts).
+
+## Design (v4, Apple-style glass; don't drift back to the old looks)
+- Frosted glass panels (backdrop-filter blur + saturate) over a slowly drifting blue, gold and teal aurora. Big tight sans headlines with serif italic accents.
+- Dark-first, with a full light theme via `prefers-color-scheme`. Every color is a CSS token.
+- No subway/transit map, no output-count charts.
+- Motion: name blurs in on load; the abstract lights up word by word on scroll; cards tilt with a spotlight on hover; each research chapter has a sticky schematic figure that advances with its steps (Question → What I did → What we found → What's next). All motion turns off under `prefers-reduced-motion`.
+- Figures are canvas schematics labeled "Schematic, not data". Replace with real figures (`assets/fig-*.png`) when Erfan provides them. Schematic labels must not state a finding he hasn't confirmed.
 
 ## Page order
-Hero (Gaussian process background, click to add a point; name, position, seeking line, area links, CV) → Abstract → 1 Research questions (DRAFT) + Figure 1 (threads as a transit map) → 2 Projects (Sci ML, Vis, Photonics, then Optics as supporting background) → 3 Methods (Table 1) → 4 Publications → A Talks → B Press → C Background → D Timeline → Contact.
+Hero (seeking pill, avatar, name, tagline, position, CV/Email/Scholar/LinkedIn, area links, VIS notice) → Abstract (scroll-lit) → Research questions (DRAFT) → Research chapters (Sci ML, Vis, Photonics, then Optics as supporting background) → Methods table → Publications (role + BibTeX) → About bento (talks, press, education, teaching, other projects, honors) → Contact.
 
 Each project: Question → What I did (his part specifically) → What we found → What's next, plus one figure slot and its papers.
 
 ## Stable anchors (used in outreach emails; never rename)
-`#seeking` `#questions` `#threads` `#sciml` `#vis` `#photonics` `#optics` `#methods` `#publications` `#talks` `#press` `#background` `#timeline` `#contact`
+`#seeking` `#abstract` `#questions` `#research` `#sciml` `#vis` `#photonics` `#optics` `#methods` `#publications` `#about` `#talks` `#press` `#background` `#contact`
 
 ## Content rules (important)
 - Never invent facts, dates, venues, co-authors, roles, awards, numbers or results. If unsure, ask Erfan.
@@ -32,7 +38,7 @@ Each project: Question → What I did (his part specifically) → What we found 
 - Voice: plain, warm, first person. No em dashes. No AI-sounding phrases.
 
 ## Timeline data
-`SITE.events` are dated. `SITE.periods` are date ranges only; the page places each event by its own date. Outcomes carry `from:` pointing to the work they came from. `soon:true` marks future events. The hero notice hides itself after `notice.until`.
+`SITE.events` are dated. `SITE.periods` are date ranges only; events are placed by their own date. Outcomes carry `from:` pointing to the work they came from. `soon:true` marks future events. v4 doesn't render the timeline yet; the data is kept for it. The hero notice hides itself after `notice.until`.
 
 ## Outreach blurb (email signature)
 Erfan Nasirzadeh Orang · M.S. student, Youngstown State University
@@ -41,6 +47,6 @@ Seeking a PhD (Fall 2027 / Spring 2028) in scientific ML, uncertainty and visual
 Per-area line for an email body: "My work on uncertainty-aware surrogates is here: <URL>#sciml" (or #vis, #photonics).
 
 ## Verify before finishing any change
-1. Open the page in a browser (or Playwright) at 1280px and 390px; screenshot the top, Figure 1 and one project section, and look at them.
+1. Open the page in a browser (or Playwright) at 1280px and 390px, in dark and light; screenshot the top and one research chapter mid-scroll, and look at them.
 2. Check the console for errors and that nothing scrolls sideways at 390px.
 3. Check every new link, and that each anchor above still exists.
