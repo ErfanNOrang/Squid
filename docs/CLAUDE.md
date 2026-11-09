@@ -3,12 +3,14 @@
 The site's job: help Erfan Nasirzadeh Orang get a funded PhD starting Fall 2027 or Spring 2028. It is the second half of his cold emails to professors. They click once, spend about 30 seconds, and decide whether to reply or take a Zoom call. Every change should help that reader.
 
 ## Stack
-- Plain static site for GitHub Pages: `index.html` (renders), `content.js` (all text and data), `cv.pdf`, `assets/` (headshot, figures).
+- Plain static site for GitHub Pages: `index.html` (renders), `content.js` (all text: `SITE`, `VENN`, `TILES`), `cv.pdf`, `assets/` (headshot).
+- Live design: wv7 "Venn" (made in a claude.ai chat). Projects are hand-drawn tiles on a Physics / Machine Learning / Visualization Venn diagram; each opens a drawer (question, what I did, what came out of it). On phones the tiles become numbered dots with a card list below.
 - No build step, no frameworks. Edit text in `content.js`, not in `index.html`.
-- Fonts: system SF on Apple devices, Inter elsewhere (headlines, body); Instrument Serif italic for accents; JetBrains Mono for labels.
-- Archived, not public: `../design/v2/`, `../design/v3/` (preprint layout), `../design/concepts/` (five design concepts).
+- Fonts: DM Serif Display, Caveat (hand-drawn labels), JetBrains Mono. Dark only.
+- Archived, not public: everything in `../design/` (see `../design/CATALOG.md`); the previous glass site is `../design/v4/` with the full content data.
+- Public build: `NEEDS:` text in content.js is hidden on the page (never shown to visitors); a drawer section with nothing confirmed is hidden.
 
-## Design (v4, Apple-style glass; don't drift back to the old looks)
+## Design history: v4, Apple-style glass (archived in ../design/v4)
 - Frosted glass panels (backdrop-filter blur + saturate) over a slowly drifting blue, gold and teal aurora. Big tight sans headlines with serif italic accents.
 - Dark-first, with a full light theme via `prefers-color-scheme`. Every color is a CSS token.
 - No subway/transit map, no output-count charts.

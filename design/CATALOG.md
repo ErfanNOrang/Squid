@@ -19,3 +19,7 @@ Brief, Tailored, Classic, Evidence, Tiers. Recommended: merge Tailored + Brief.
 - wv3-1 Quiet: after danielhaehn.com
 - wv3-2 (name after seeing it): after daniellabarlev.github.io
 - wv3-3 Template: after zwhile.prof, on the same academic template
+
+## Live
+- wv7 "Venn": `docs/` (made in a claude.ai chat; public build hides unconfirmed NEEDS text)
+- wv1-4 Glass moved to `design/v4/` with its full content data.
